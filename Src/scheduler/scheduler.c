@@ -161,6 +161,7 @@ void decrement_sleep_counters()
 void __reschedule()
 {
     DATA u8 tmp_save_sp;
+
     tmp_save_sp = SP;
     my_memcpy(interrupt_frames[current_process], (u8 IDATA*)(tmp_save_sp-16), 15);
 
@@ -194,7 +195,7 @@ XDATA u8 tmp_curr_seg;
 void error_spin(u8 errorcode)
 {
     //disable interrupts (spin forever)
-    EA = 0;
+    TR0 = 0;
 
     seg_set_str("ERROR   ");
 

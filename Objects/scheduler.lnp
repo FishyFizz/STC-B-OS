@@ -8,4 +8,4 @@
 ".\Objects\mem.obj" 
 TO ".\Objects\scheduler" 
 
-PRINT(".\Listings\scheduler.map")
+PRINT(".\Listings\scheduler.map") DISABLEWARNING (57) 

@@ -1,9 +1,9 @@
-C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 00:24:35 PAGE 1   
+C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 06:04:13 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
 OBJECT MODULE PLACED IN .\Objects\main.obj
-COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\main.c OMF2 OPTIMIZE(8,SPEED) BROWSE DEFINE(STC) DEBUG PR
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\main.c OMF2 OPTIMIZE(0,SPEED) BROWSE DEFINE(STC) DEBUG PR
                     -INT(.\Listings\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
 
 line level    source
@@ -21,58 +21,141 @@ line level    source
   11   1          delay_ms(500);
   12   1          LEDs = 0x00;
   13   1          delay_ms(100);
-  14   1      }
-  15          
-  16          void proc1()
-  17          {
-  18   1          while(1)
-  19   1          {
-  20   2              //blink led6
-  21   2              sleep(2047);
-  22   2              LEDs |= 0x40;
-  23   2      
-  24   2              sleep(2047);
-  25   2              LEDs &= 0xBF;
-  26   2          }
-  27   1      }
-  28          
-  29          void proc2()
-  30          {
-  31   1          while(1)
-  32   1          {
-  33   2              //spin
-  34   2              yield();
-  35   2          }
-  36   1      }
-  37          
-  38          void main() //also proc0
-  39          {
-  40   1          startup();
-  41   1      
-  42   1          start_scheduler(1);
-  43   1          start_process(proc1);
-  44   1          start_process(proc2);
-  45   1      
-  46   1          while(1)
-  47   1          {
-  48   2              //blink led7
-  49   2              sleep(1023);
-  50   2              LEDs |= 0x80;
-  51   2      
-  52   2              sleep(1023);
-  53   2              LEDs &= 0x7F;
-  54   2          }
-C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 00:24:35 PAGE 2   
+  14   1          led_display_content = 0;
+  15   1          seg_set_number(0);
+  16   1      }
+  17          
+  18          XDATA u32 conc_test = 0;
+  19          void proc1()
+  20          {
+  21   1          while(1)
+  22   1          {
+  23   2              sleep(100);
+  24   2              SETBIT(led_display_content, 0);
+  25   2      
+  26   2              sleep(100);
+  27   2              CLEARBIT(led_display_content, 0);
+  28   2          }
+  29   1      }
+  30          
+  31          void proc2()
+  32          {
+  33   1          while(1)
+  34   1          {
+  35   2              sleep(200);
+  36   2              SETBIT(led_display_content, 1);
+  37   2      
+  38   2              sleep(200);
+  39   2              CLEARBIT(led_display_content, 1);
+  40   2          }
+  41   1      }
+  42          
+  43          void proc3()
+  44          {
+  45   1          while(1)
+  46   1          {
+  47   2              sleep(400);
+  48   2              SETBIT(led_display_content, 2);
+  49   2      
+  50   2              sleep(400);
+  51   2              CLEARBIT(led_display_content, 2);
+  52   2          }
+  53   1      }
+  54          
+C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 06:04:13 PAGE 2   
 
-  55   1      }
+  55          void proc4()
+  56          {
+  57   1          while(1)
+  58   1          {
+  59   2              sleep(800);
+  60   2              SETBIT(led_display_content, 3);
+  61   2      
+  62   2              sleep(800);
+  63   2              CLEARBIT(led_display_content, 3);
+  64   2          }
+  65   1      }
+  66          
+  67          void proc5()
+  68          {
+  69   1          u16 inc_count = 0;
+  70   1          for(inc_count = 0; inc_count < 5000; inc_count++){
+  71   2              /*
+  72   2              conc_test in XDATA, reading, increment in register, write back
+  73   2              takes many CPU cycles to complete. During this time, a reschedule
+  74   2              can happen, leading to a result smaller than expected.
+  75   2              */
+  76   2              ATOMIC(conc_test++;)
+  77   2              //conc_test++;
+  78   2          }
+  79   1      
+  80   1          while(1) yield();
+  81   1      }
+  82          
+  83          void proc6()
+  84          {
+  85   1          u16 inc_count = 0;
+  86   1          for(inc_count = 0; inc_count < 5000; inc_count++){
+  87   2              ATOMIC(conc_test++;)
+  88   2              //conc_test++;
+  89   2          }
+  90   1          while(1) yield();
+  91   1      }
+  92          
+  93          void proc7()
+  94          {
+  95   1          u16 inc_count = 0;
+  96   1          for(inc_count = 0; inc_count < 5000; inc_count++){
+  97   2              ATOMIC(conc_test++;)
+  98   2              //conc_test++;
+  99   2          }
+ 100   1          while(1) yield();
+ 101   1      }
+ 102          
+ 103          XDATA u8 current = 0;
+ 104          void main() //also proc0
+ 105          {
+ 106   1          startup();
+ 107   1      
+ 108   1          start_scheduler(1);
+ 109   1          start_process(proc1);
+ 110   1          start_process(proc2);
+ 111   1          start_process(proc3);
+ 112   1          start_process(proc4);
+ 113   1          start_process(proc5);
+ 114   1          start_process(proc6);
+ 115   1          start_process(proc7);
+ 116   1      
+C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 06:04:13 PAGE 3   
+
+ 117   1      
+ 118   1          //DISPLAY DRIVER
+ 119   1          while(1)
+ 120   1          {
+ 121   2              seg_set_number(conc_test);
+ 122   2              switch(current)
+ 123   2              {
+ 124   3                  case 0: DISP_SEG(0)     current++; break;
+ 125   3                  case 1: DISP_SEG(1)     current++; break;
+ 126   3                  case 2: DISP_SEG(2)     current++; break;
+ 127   3                  case 3: DISP_SEG(3)     current++; break;
+ 128   3                  case 4: DISP_SEG(4)     current++; break;
+ 129   3                  case 5: DISP_SEG(5)     current++; break;
+ 130   3                  case 6: DISP_SEG(6)     current++; break;
+ 131   3                  case 7: DISP_SEG(7)     current++; break;
+ 132   3                  case 8: DISP_LED()      current=0; break;
+ 133   3              }
+ 134   2              yield(); 
+ 135   2          }
+ 136   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    221    ----
+   CODE SIZE        =   1074    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =   ----    ----
+   XDATA SIZE       =      5    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----    ----
+   DATA SIZE        =      6    ----
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
    EDATA SIZE       =   ----    ----

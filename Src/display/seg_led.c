@@ -1,4 +1,5 @@
 #include "seg_led.h"
+#include "../scheduler/scheduler.h"
 
 XDATA u8 seg_display_content[8];
 XDATA u8 led_display_content;
@@ -26,4 +27,52 @@ void seg_set_str(const char* str)
     seg_display_content[5] = seg_decoder[str[5]];
     seg_display_content[6] = seg_decoder[str[6]];
     seg_display_content[7] = seg_decoder[str[7]];
+}
+
+void seg_set_number(u32 n)
+{
+    seg_display_content[7] = seg_decoder[n%10]; n/=10;
+    seg_display_content[6] = seg_decoder[n%10]; n/=10;
+    seg_display_content[5] = seg_decoder[n%10]; n/=10;
+    seg_display_content[4] = seg_decoder[n%10]; n/=10;
+    seg_display_content[3] = seg_decoder[n%10]; n/=10;
+    seg_display_content[2] = seg_decoder[n%10]; n/=10;
+    seg_display_content[1] = seg_decoder[n%10]; n/=10;
+    seg_display_content[0] = seg_decoder[n%10]; n/=10;
+}
+
+void seg_led_driver_loop()
+{
+    XDATA u8 current = 0;
+    while(1)
+    {
+        switch(current)
+        {
+            case 0: DISP_SEG(0)     current++; break;
+            case 1: DISP_SEG(1)     current++; break;
+            case 2: DISP_SEG(2)     current++; break;
+            case 3: DISP_SEG(3)     current++; break;
+            case 4: DISP_SEG(4)     current++; break;
+            case 5: DISP_SEG(5)     current++; break;
+            case 6: DISP_SEG(6)     current++; break;
+            case 7: DISP_SEG(7)     current++; break;
+            case 8: DISP_LED()      current=0; break;
+        }
+
+        /*
+            NOTE: 
+            1ms or 2ms per scan looks great.
+            3ms per scan will have minor visual blinking effect.
+            4ms+ looks bad.
+
+            You might as well integrate display refresh code into
+            system timer interrupt service routine.
+        */
+
+        //if driver loop is runned as a process:
+        yield(); 
+
+        //if driver loop is runned directly:
+        //delay_ms(2);
+    }
 }

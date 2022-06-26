@@ -25,4 +25,6 @@
 #define CLEARBIT(var, bit) {(var) &= ~(1<<(bit));}
 #define SETBIT(var, bit) {(var) |= (1<<(bit));}
 
+extern XDATA u32 conc_test;
+
 #endif //_GLOBAL_H_

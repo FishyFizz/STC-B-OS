@@ -7,12 +7,15 @@ linking...
 *** WARNING L57: UNCALLED FUNCTION, IGNORED FOR OVERLAY PROCESS
     NAME:    __RESCHEDULE/SCHEDULER
 
+*** WARNING L57: UNCALLED FUNCTION, IGNORED FOR OVERLAY PROCESS
+    NAME:    SEG_LED_DRIVER_LOOP/SEG_LED
+
 *** WARNING L30: MEMORY SPACE OVERLAP
     SEG:     ?TIMER?0000B
     FROM:    C:00000BH   
     TO:      C:00000EH   
 
-Program Size: data=25.0 xdata=170 const=137 code=2709
+Program Size: data=25.0 xdata=176 const=137 code=4131
 creating hex file from ".\Objects\scheduler"...
-".\Objects\scheduler" - 0 Error(s), 3 Warning(s).
+".\Objects\scheduler" - 0 Error(s), 4 Warning(s).
 Build Time Elapsed:  00:00:00

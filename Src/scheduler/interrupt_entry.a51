@@ -56,7 +56,6 @@ RSEG INTERRUPT_HANDLER
 ;============================================================= 
     PUBLIC __YIELD
     __YIELD:
-
         MOV FLAG_NOSCHED, #1
 
         ;Save program state, PC already saved by hardware

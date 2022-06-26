@@ -2,7 +2,7 @@
 #define _SCHEDULER_H_
 #include "../global.h"
 
-#define DEFAULT_TIMESLICES 50
+#define DEFAULT_TIMESLICES 3
 
 #define INTFRM_ADDRLO 0
 #define INTFRM_ADDRHI 1
