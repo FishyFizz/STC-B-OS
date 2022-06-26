@@ -35,14 +35,20 @@ void main() //also proc0
 {
     startup();
 
-    //Atomic operations not yet implemented, must start process before scheduler
+    start_scheduler(1);
     start_process(proc1);
     start_process(proc2);
 
-    start_scheduler(1);
-
     while(1)
     {
+        delay_ms(255);
+        delay_ms(255);
+        delay_ms(255);
+        delay_ms(255);
+        delay_ms(255);
+        delay_ms(255);
+        
+        flag_nosched = 1;
         led_display_content = 0x01;
         DISP_LED();
     }

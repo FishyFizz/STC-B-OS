@@ -6,6 +6,7 @@ XDATA u8 interrupt_frames[8][15];
 XDATA u8 current_process = 0;
 XDATA u32 system_cycles = 0;
 XDATA u8 process_slot = 1;
+DATA u8 flag_nosched = 0;
 
 void start_scheduler(u8 ms_per_interrupt)
 {
@@ -29,15 +30,16 @@ void start_scheduler(u8 ms_per_interrupt)
 DATA u8 tmp_save_sp;
 void timer0_interrupt()
 {
+    system_cycles++;
+    if(flag_nosched) return;
+//=============================================================================
+
     //Save interrupt frame of current process
     tmp_save_sp = SP;
     my_memcpy(interrupt_frames[current_process], (u8 IDATA*)(tmp_save_sp-16), 15);
     //=========================================================================
 
-    system_cycles++;
     current_process = select_process();
-    if(current_process >= 8)    //can't find a process to run
-        error_spin(1);           
 
     /*
     //Debug
@@ -77,7 +79,7 @@ u8 process_ready(u8 pid)
     return 1;
 }
 
-u8 start_process(PROCESS_ENTRY entry)
+u8 __start_process(PROCESS_ENTRY entry)
 {
     XDATA u8 tmp_process;
     

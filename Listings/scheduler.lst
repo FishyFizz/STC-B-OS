@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   SCHEDULER                                                         06/26/2022 21:04:27 PAGE 1   
+C51 COMPILER V9.60.0.0   SCHEDULER                                                         06/26/2022 22:30:51 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE SCHEDULER
@@ -16,150 +16,152 @@ line level    source
    6          XDATA u8 current_process = 0;
    7          XDATA u32 system_cycles = 0;
    8          XDATA u8 process_slot = 1;
-   9          
-  10          void start_scheduler(u8 ms_per_interrupt)
-  11          {
-  12   1          //Set Timer0, Enable interrupt.
-  13   1          {   
-  14   2              XDATA TIM_InitTypeDef timer_settings;
-  15   2              timer_settings.TIM_Mode = TIM_16BitAutoReload;
-  16   2              timer_settings.TIM_Polity = PolityHigh;
-  17   2              timer_settings.TIM_Interrupt = ENABLE;
-  18   2              timer_settings.TIM_ClkSource = TIM_CLOCK_12T;
-  19   2              timer_settings.TIM_ClkOut = DISABLE;
-  20   2              timer_settings.TIM_Value = calc_TIM_from_ms_12t(ms_per_interrupt*2);
-  21   2              timer_settings.TIM_Run = ENABLE;
-  22   2              Timer_Inilize(Timer0, &timer_settings);
-  23   2          }
-  24   1      
-  25   1          //Enable interrupts
-  26   1          EA = 1;
-  27   1      }
-  28          
-  29          DATA u8 tmp_save_sp;
-  30          void timer0_interrupt()
-  31          {
-  32   1          //Save interrupt frame of current process
-  33   1          tmp_save_sp = SP;
-  34   1          my_memcpy(interrupt_frames[current_process], (u8 IDATA*)(tmp_save_sp-16), 15);
-  35   1          //=========================================================================
+   9          DATA u8 flag_nosched = 0;
+  10          
+  11          void start_scheduler(u8 ms_per_interrupt)
+  12          {
+  13   1          //Set Timer0, Enable interrupt.
+  14   1          {   
+  15   2              XDATA TIM_InitTypeDef timer_settings;
+  16   2              timer_settings.TIM_Mode = TIM_16BitAutoReload;
+  17   2              timer_settings.TIM_Polity = PolityHigh;
+  18   2              timer_settings.TIM_Interrupt = ENABLE;
+  19   2              timer_settings.TIM_ClkSource = TIM_CLOCK_12T;
+  20   2              timer_settings.TIM_ClkOut = DISABLE;
+  21   2              timer_settings.TIM_Value = calc_TIM_from_ms_12t(ms_per_interrupt*2);
+  22   2              timer_settings.TIM_Run = ENABLE;
+  23   2              Timer_Inilize(Timer0, &timer_settings);
+  24   2          }
+  25   1      
+  26   1          //Enable interrupts
+  27   1          EA = 1;
+  28   1      }
+  29          
+  30          DATA u8 tmp_save_sp;
+  31          void timer0_interrupt()
+  32          {
+  33   1          system_cycles++;
+  34   1          if(flag_nosched) return;
+  35   1      //=============================================================================
   36   1      
-  37   1          system_cycles++;
-  38   1          current_process = select_process();
-  39   1          if(current_process >= 8)    //can't find a process to run
-  40   1              error_spin(1);           
+  37   1          //Save interrupt frame of current process
+  38   1          tmp_save_sp = SP;
+  39   1          my_memcpy(interrupt_frames[current_process], (u8 IDATA*)(tmp_save_sp-16), 15);
+  40   1          //=========================================================================
   41   1      
-  42   1          /*
-  43   1          //Debug
-  44   1          led_display_content = system_cycles>>4;
-  45   1          DISP_LED();
-  46   1          */
-  47   1          
-  48   1          //=========================================================================
-  49   1          //Load interrupt frame of current process
-  50   1          my_memcpy((u8 IDATA*)(tmp_save_sp-16), interrupt_frames[current_process], 15);
-  51   1      }
-  52          
-  53          u8 select_process()
-  54          {
-C51 COMPILER V9.60.0.0   SCHEDULER                                                         06/26/2022 21:04:27 PAGE 2   
+  42   1          current_process = select_process();
+  43   1      
+  44   1          /*
+  45   1          //Debug
+  46   1          led_display_content = system_cycles>>4;
+  47   1          DISP_LED();
+  48   1          */
+  49   1          
+  50   1          //=========================================================================
+  51   1          //Load interrupt frame of current process
+  52   1          my_memcpy((u8 IDATA*)(tmp_save_sp-16), interrupt_frames[current_process], 15);
+  53   1      }
+  54          
+C51 COMPILER V9.60.0.0   SCHEDULER                                                         06/26/2022 22:30:51 PAGE 2   
 
-  55   1          XDATA u8 tmp_process;
-  56   1          tmp_process = current_process;
-  57   1      
-  58   1          //sequentially check other processes
-  59   1          while((tmp_process = NEXT(tmp_process)) != current_process)
-  60   1              if(process_ready(tmp_process))
-  61   1                  return tmp_process;
-  62   1      
-  63   1          //if no other process can run, check if current process can run again
-  64   1          if (process_ready(current_process))
-  65   1              return current_process;
-  66   1          
-  67   1          //Can't find a process to run, Error code 1.
-  68   1          error_spin(1);
-  69   1      }
-  70          
-  71          u8 process_ready(u8 pid)
-  72          {
-  73   1          //Check process exists
-  74   1          if(!PROC_EXISTS(pid))
-  75   1              return 0;
-  76   1      
-  77   1          return 1;
-  78   1      }
-  79          
-  80          u8 start_process(PROCESS_ENTRY entry)
-  81          {
-  82   1          XDATA u8 tmp_process;
-  83   1          
-  84   1          //find a slot for new process
-  85   1          tmp_process = find_empty_slot();
-  86   1          
-  87   1          //create interrupt frame for process
-  88   1          memzero(interrupt_frames[tmp_process], 15);
-  89   1          interrupt_frames[tmp_process][INTFRM_ADDRLO] = ((u16)entry) & 0xff;
-  90   1          interrupt_frames[tmp_process][INTFRM_ADDRHI] = (((u16)entry)>>8) & 0xff;
-  91   1      
-  92   1          //flag process existence
-  93   1          process_slot |= BIT(tmp_process);
-  94   1      
-  95   1          return tmp_process;
-  96   1      }
-  97          
-  98          u8 find_empty_slot()
-  99          {
- 100   1          XDATA u8 tmp_process;
- 101   1      
- 102   1          for(tmp_process = 0; tmp_process<8; tmp_process++)
- 103   1          {
- 104   2              if(!PROC_EXISTS(tmp_process))
- 105   2              {
- 106   3                  tmp_process |= BIT(7); //set this bit to indicate that a valid slot is found
- 107   3                  break;
- 108   3              }
- 109   2          }
- 110   1      
- 111   1          //can't find a slot for new process
- 112   1          if(!(tmp_process&BIT(7)))
- 113   1              error_spin(2);
- 114   1      
- 115   1          return (tmp_process & 0x07); //remove the flag before returning
- 116   1      }
-C51 COMPILER V9.60.0.0   SCHEDULER                                                         06/26/2022 21:04:27 PAGE 3   
+  55          u8 select_process()
+  56          {
+  57   1          XDATA u8 tmp_process;
+  58   1          tmp_process = current_process;
+  59   1      
+  60   1          //sequentially check other processes
+  61   1          while((tmp_process = NEXT(tmp_process)) != current_process)
+  62   1              if(process_ready(tmp_process))
+  63   1                  return tmp_process;
+  64   1      
+  65   1          //if no other process can run, check if current process can run again
+  66   1          if (process_ready(current_process))
+  67   1              return current_process;
+  68   1          
+  69   1          //Can't find a process to run, Error code 1.
+  70   1          error_spin(1);
+  71   1      }
+  72          
+  73          u8 process_ready(u8 pid)
+  74          {
+  75   1          //Check process exists
+  76   1          if(!PROC_EXISTS(pid))
+  77   1              return 0;
+  78   1      
+  79   1          return 1;
+  80   1      }
+  81          
+  82          u8 __start_process(PROCESS_ENTRY entry)
+  83          {
+  84   1          XDATA u8 tmp_process;
+  85   1          
+  86   1          //find a slot for new process
+  87   1          tmp_process = find_empty_slot();
+  88   1          
+  89   1          //create interrupt frame for process
+  90   1          memzero(interrupt_frames[tmp_process], 15);
+  91   1          interrupt_frames[tmp_process][INTFRM_ADDRLO] = ((u16)entry) & 0xff;
+  92   1          interrupt_frames[tmp_process][INTFRM_ADDRHI] = (((u16)entry)>>8) & 0xff;
+  93   1      
+  94   1          //flag process existence
+  95   1          process_slot |= BIT(tmp_process);
+  96   1      
+  97   1          return tmp_process;
+  98   1      }
+  99          
+ 100          u8 find_empty_slot()
+ 101          {
+ 102   1          XDATA u8 tmp_process;
+ 103   1      
+ 104   1          for(tmp_process = 0; tmp_process<8; tmp_process++)
+ 105   1          {
+ 106   2              if(!PROC_EXISTS(tmp_process))
+ 107   2              {
+ 108   3                  tmp_process |= BIT(7); //set this bit to indicate that a valid slot is found
+ 109   3                  break;
+ 110   3              }
+ 111   2          }
+ 112   1      
+ 113   1          //can't find a slot for new process
+ 114   1          if(!(tmp_process&BIT(7)))
+ 115   1              error_spin(2);
+ 116   1      
+C51 COMPILER V9.60.0.0   SCHEDULER                                                         06/26/2022 22:30:51 PAGE 3   
 
- 117          
- 118          XDATA u8 tmp_curr_seg;
- 119          void error_spin(u8 errorcode)
- 120          {
- 121   1          //disable interrupts (spin forever)
- 122   1          EA = 0;
- 123   1      
- 124   1          seg_set_str("ERROR   ");
+ 117   1          return (tmp_process & 0x07); //remove the flag before returning
+ 118   1      }
+ 119          
+ 120          XDATA u8 tmp_curr_seg;
+ 121          void error_spin(u8 errorcode)
+ 122          {
+ 123   1          //disable interrupts (spin forever)
+ 124   1          EA = 0;
  125   1      
- 126   1          seg_display_content[7]=seg_decoder[errorcode%10];
- 127   1          errorcode/=10;
- 128   1          seg_display_content[6]=seg_decoder[errorcode%10];
+ 126   1          seg_set_str("ERROR   ");
+ 127   1      
+ 128   1          seg_display_content[7]=seg_decoder[errorcode%10];
  129   1          errorcode/=10;
- 130   1          seg_display_content[5]=seg_decoder[errorcode%10];
+ 130   1          seg_display_content[6]=seg_decoder[errorcode%10];
  131   1          errorcode/=10;
- 132   1      
- 133   1          while (1)
- 134   1          {
- 135   2              tmp_curr_seg++;
- 136   2              DISP_SEG(tmp_curr_seg & 0x7);
- 137   2              delay_ms(2);
- 138   2          }
- 139   1      }
-*** WARNING C291 IN LINE 69 OF Src\scheduler\scheduler.c: not every exit path returns a value
+ 132   1          seg_display_content[5]=seg_decoder[errorcode%10];
+ 133   1          errorcode/=10;
+ 134   1      
+ 135   1          while (1)
+ 136   1          {
+ 137   2              tmp_curr_seg++;
+ 138   2              DISP_SEG(tmp_curr_seg & 0x7);
+ 139   2              delay_ms(2);
+ 140   2          }
+ 141   1      }
+*** WARNING C291 IN LINE 71 OF Src\scheduler\scheduler.c: not every exit path returns a value
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    647    ----
+   CODE SIZE        =    635    ----
    CONSTANT SIZE    =      9    ----
    XDATA SIZE       =    127      11
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =      1       3
+   DATA SIZE        =      2       3
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
    EDATA SIZE       =   ----    ----

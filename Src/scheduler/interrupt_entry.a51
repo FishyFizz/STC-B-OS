@@ -1,5 +1,7 @@
 
 EXTERN CODE:NEAR (TIMER0_INTERRUPT)
+
+EXTERN DATA (FLAG_NOSCHED)
 	
 ;=============================================================  
 
