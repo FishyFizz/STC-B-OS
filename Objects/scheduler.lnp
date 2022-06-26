@@ -1,0 +1,10 @@
+".\Objects\main.obj",
+".\Objects\scheduler.obj",
+".\Objects\delay.obj",
+".\Objects\timer.obj",
+".\Objects\seg_led.obj",
+".\Objects\STARTUP.obj",
+".\Objects\interrupt_entry.obj" 
+TO ".\Objects\scheduler" 
+
+PRINT(".\Listings\scheduler.map")

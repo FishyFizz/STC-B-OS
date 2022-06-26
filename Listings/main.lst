@@ -1,0 +1,52 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              06/26/2022 19:34:08 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\main.c OMF2 OPTIMIZE(8,SPEED) BROWSE DEBUG PRINT(.\Listin
+                    -gs\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include "global.h"
+   2          #include "scheduler/scheduler.h"
+   3          #include "display/seg_led.h"
+   4          
+   5          void startup()
+   6          {
+   7   1          seg_led_init();
+   8   1          led_display_content = 0xFF;
+   9   1          DISP_LED();
+  10   1          delay_ms(500);
+  11   1          led_display_content = 0x00;
+  12   1          DISP_LED();
+  13   1          delay_ms(100);
+  14   1      }
+  15          
+  16          void main()
+  17          {
+  18   1          startup();
+  19   1      
+  20   1          EA = 1;
+  21   1          start_scheduler(1);
+  22   1      
+  23   1          while(1);
+  24   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     50    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

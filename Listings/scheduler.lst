@@ -1,0 +1,52 @@
+C51 COMPILER V9.60.0.0   SCHEDULER                                                         06/26/2022 19:34:08 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE SCHEDULER
+OBJECT MODULE PLACED IN .\Objects\scheduler.obj
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\scheduler\scheduler.c OMF2 OPTIMIZE(8,SPEED) BROWSE DEBUG
+                    - PRINT(.\Listings\scheduler.lst) TABS(2) OBJECT(.\Objects\scheduler.obj)
+
+line level    source
+
+   1          #include "scheduler.h"
+   2          #include "../display/seg_led.h"
+   3          
+   4          void start_scheduler(u8 ms_per_interrupt)
+   5          {
+   6   1          //Set Timer0, Enable interrupt.
+   7   1          {   
+   8   2              XDATA TIM_InitTypeDef timer_settings;
+   9   2              timer_settings.TIM_Mode = TIM_16BitAutoReload;
+  10   2              timer_settings.TIM_Polity = PolityHigh;
+  11   2              timer_settings.TIM_Interrupt = ENABLE;
+  12   2              timer_settings.TIM_ClkSource = TIM_CLOCK_12T;
+  13   2              timer_settings.TIM_ClkOut = DISABLE;
+  14   2              timer_settings.TIM_Value = calc_TIM_from_ms_12t(ms_per_interrupt*2);
+  15   2              timer_settings.TIM_Run = ENABLE;
+  16   2              Timer_Inilize(Timer0, &timer_settings);
+  17   2          }
+  18   1      }
+  19          
+  20          void timer0_interrupt()
+  21          {
+  22   1          led_display_content++;
+  23   1          DISP_LED();
+  24   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     57    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       8
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
