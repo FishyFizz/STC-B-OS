@@ -6,6 +6,15 @@ XDATA u8 interrupt_frames[8][15];
 XDATA u8 current_process = 0;
 XDATA u32 system_cycles = 0;
 XDATA u8 process_slot = 1;
+
+XDATA u8 remaining_timeslices = DEFAULT_TIMESLICES;
+XDATA u8 proc_time_share[8] = {
+    DEFAULT_TIMESLICES, DEFAULT_TIMESLICES,
+    DEFAULT_TIMESLICES, DEFAULT_TIMESLICES,
+    DEFAULT_TIMESLICES, DEFAULT_TIMESLICES,
+    DEFAULT_TIMESLICES, DEFAULT_TIMESLICES
+};//This determines the number of timeslices assigned when each process is scheduled
+
 DATA u8 flag_nosched = 0;
 
 void start_scheduler(u8 ms_per_interrupt)
@@ -31,7 +40,13 @@ DATA u8 tmp_save_sp;
 void timer0_interrupt()
 {
     system_cycles++;
+
+    //Running atomic code, do not reschedule
     if(flag_nosched) return;
+
+    //Current process has remaining time slices, do not reschedule
+    remaining_timeslices--;
+    if(remaining_timeslices) return;
 //=============================================================================
 
     //Save interrupt frame of current process
@@ -40,6 +55,7 @@ void timer0_interrupt()
     //=========================================================================
 
     current_process = select_process();
+    remaining_timeslices = proc_time_share[current_process];
 
     /*
     //Debug

@@ -2,6 +2,8 @@
 #define _SCHEDULER_H_
 #include "../global.h"
 
+#define DEFAULT_TIMESLICES 20
+
 #define INTFRM_ADDRLO 0
 #define INTFRM_ADDRHI 1
 
@@ -14,6 +16,9 @@ extern XDATA u8 interrupt_frames[8][15];
 extern XDATA u8 current_process;
 extern XDATA u32 system_cycles;
 extern XDATA u8 process_slot;
+
+extern XDATA u8 remaining_timeslices;
+extern XDATA u8 proc_time_share[8];
 
 /*
 This variable MUST be in DATA memory, because write or read to this

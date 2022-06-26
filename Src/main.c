@@ -38,17 +38,11 @@ void main() //also proc0
     start_scheduler(1);
     start_process(proc1);
     start_process(proc2);
+    proc_time_share[1] = 40;
+    proc_time_share[2] = 80;
 
     while(1)
     {
-        delay_ms(255);
-        delay_ms(255);
-        delay_ms(255);
-        delay_ms(255);
-        delay_ms(255);
-        delay_ms(255);
-        
-        flag_nosched = 1;
         led_display_content = 0x01;
         DISP_LED();
     }

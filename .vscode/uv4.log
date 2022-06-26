@@ -1,7 +1,7 @@
 Build target 'Scheduler'
 compiling main.c...
 compiling scheduler.c...
-Src\scheduler\scheduler.c(71): warning C291: not every exit path returns a value
+Src\scheduler\scheduler.c(87): warning C291: not every exit path returns a value
 linking...
 *** WARNING L57: UNCALLED FUNCTION, IGNORED FOR OVERLAY PROCESS
     NAME:    TIMER0_INTERRUPT/SCHEDULER
@@ -11,7 +11,7 @@ linking...
     FROM:    C:00000BH   
     TO:      C:00000EH   
 
-Program Size: data=23.0 xdata=145 const=137 code=2022
+Program Size: data=23.0 xdata=154 const=137 code=2037
 creating hex file from ".\Objects\scheduler"...
 ".\Objects\scheduler" - 0 Error(s), 3 Warning(s).
 Build Time Elapsed:  00:00:00
