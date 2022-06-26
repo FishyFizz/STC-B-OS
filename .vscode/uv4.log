@@ -1,15 +1,21 @@
 Build target 'Scheduler'
 compiling main.c...
+compiling scheduler.c...
+Src\scheduler\scheduler.c(76): warning C280: 'entry': unreferenced local variable
+Src\scheduler\scheduler.c(65): warning C291: not every exit path returns a value
 linking...
 *** WARNING L57: UNCALLED FUNCTION, IGNORED FOR OVERLAY PROCESS
     NAME:    TIMER0_INTERRUPT/SCHEDULER
+
+*** WARNING L57: UNCALLED FUNCTION, IGNORED FOR OVERLAY PROCESS
+    NAME:    _START_PROCESS/SCHEDULER
 
 *** WARNING L30: MEMORY SPACE OVERLAP
     SEG:     ?TIMER?0000B
     FROM:    C:00000BH   
     TO:      C:00000EH   
 
-Program Size: data=17.0 xdata=142 const=0 code=1283
+Program Size: data=20.0 xdata=145 const=137 code=1764
 creating hex file from ".\Objects\scheduler"...
-".\Objects\scheduler" - 0 Error(s), 2 Warning(s).
-Build Time Elapsed:  00:00:00
+".\Objects\scheduler" - 0 Error(s), 5 Warning(s).
+Build Time Elapsed:  00:00:01

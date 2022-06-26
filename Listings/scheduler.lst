@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   SCHEDULER                                                         06/26/2022 20:01:52 PAGE 1   
+C51 COMPILER V9.60.0.0   SCHEDULER                                                         06/26/2022 20:35:33 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE SCHEDULER
@@ -15,57 +15,119 @@ line level    source
    5          XDATA u8 interrupt_frames[8][15];
    6          XDATA u8 current_process = 0;
    7          XDATA u32 system_cycles = 0;
-   8          
-   9          void start_scheduler(u8 ms_per_interrupt)
-  10          {
-  11   1          //Set Timer0, Enable interrupt.
-  12   1          {   
-  13   2              XDATA TIM_InitTypeDef timer_settings;
-  14   2              timer_settings.TIM_Mode = TIM_16BitAutoReload;
-  15   2              timer_settings.TIM_Polity = PolityHigh;
-  16   2              timer_settings.TIM_Interrupt = ENABLE;
-  17   2              timer_settings.TIM_ClkSource = TIM_CLOCK_12T;
-  18   2              timer_settings.TIM_ClkOut = DISABLE;
-  19   2              timer_settings.TIM_Value = calc_TIM_from_ms_12t(ms_per_interrupt*2);
-  20   2              timer_settings.TIM_Run = ENABLE;
-  21   2              Timer_Inilize(Timer0, &timer_settings);
-  22   2          }
-  23   1      }
-  24          
-  25          DATA u8 tmp_save_sp;
-  26          void timer0_interrupt()
-  27          {
-  28   1          //Save interrupt frame of current process
-  29   1          tmp_save_sp = SP;
-  30   1          my_memcpy(interrupt_frames[current_process], (u8 IDATA*)(tmp_save_sp-16), 15);
-  31   1          //=========================================================================
-  32   1      
-  33   1          system_cycles++;
-  34   1      
-  35   1          led_display_content = system_cycles>>4;
-  36   1          DISP_LED();
-  37   1      
-  38   1          //=========================================================================
-  39   1          //Load interrupt frame of current process
-  40   1          my_memcpy((u8 IDATA*)(tmp_save_sp-16), interrupt_frames[current_process], 15);
-  41   1      }
+   8          XDATA u8 process_slot = 1;
+   9          
+  10          void start_scheduler(u8 ms_per_interrupt)
+  11          {
+  12   1          //Set Timer0, Enable interrupt.
+  13   1          {   
+  14   2              XDATA TIM_InitTypeDef timer_settings;
+  15   2              timer_settings.TIM_Mode = TIM_16BitAutoReload;
+  16   2              timer_settings.TIM_Polity = PolityHigh;
+  17   2              timer_settings.TIM_Interrupt = ENABLE;
+  18   2              timer_settings.TIM_ClkSource = TIM_CLOCK_12T;
+  19   2              timer_settings.TIM_ClkOut = DISABLE;
+  20   2              timer_settings.TIM_Value = calc_TIM_from_ms_12t(ms_per_interrupt*2);
+  21   2              timer_settings.TIM_Run = ENABLE;
+  22   2              Timer_Inilize(Timer0, &timer_settings);
+  23   2          }
+  24   1      }
+  25          
+  26          DATA u8 tmp_save_sp;
+  27          void timer0_interrupt()
+  28          {
+  29   1          //Save interrupt frame of current process
+  30   1          tmp_save_sp = SP;
+  31   1          my_memcpy(interrupt_frames[current_process], (u8 IDATA*)(tmp_save_sp-16), 15);
+  32   1          //=========================================================================
+  33   1      
+  34   1          system_cycles++;
+  35   1          current_process = select_process();
+  36   1          if(current_process >= 8)    //can't find a process to run
+  37   1              error_spin(1);           
+  38   1      
+  39   1      
+  40   1          //Debug
+  41   1          led_display_content = system_cycles>>4;
+  42   1          DISP_LED();
+  43   1      
+  44   1          //=========================================================================
+  45   1          //Load interrupt frame of current process
+  46   1          my_memcpy((u8 IDATA*)(tmp_save_sp-16), interrupt_frames[current_process], 15);
+  47   1      }
+  48          
+  49          XDATA u8 tmp_process;
+  50          u8 select_process()
+  51          {
+  52   1          tmp_process = current_process;
+  53   1      
+  54   1          //sequentially check other processes
+C51 COMPILER V9.60.0.0   SCHEDULER                                                         06/26/2022 20:35:33 PAGE 2   
+
+  55   1          while(++tmp_process != current_process)
+  56   1              if(process_ready(tmp_process))
+  57   1                  return tmp_process;
+  58   1      
+  59   1          //if no other process can run, check if current process can run again
+  60   1          if (process_ready(current_process))
+  61   1              return current_process;
+  62   1          
+  63   1          //Can't find a process to run, Error code 1.
+  64   1          error_spin(1);
+  65   1      }
+  66          
+  67          u8 process_ready(u8 pid)
+  68          {
+  69   1          //Check process exists
+  70   1          if(!(process_slot & BIT(pid)))
+  71   1              return 0;
+  72   1          
+  73   1          return 1;
+  74   1      }
+  75          
+  76          void start_process(PROCESS_ENTRY entry)
+  77          {
+  78   1      
+  79   1      }
+*** WARNING C280 IN LINE 76 OF Src\scheduler\scheduler.c: 'entry': unreferenced local variable
+  80          
+  81          XDATA u8 tmp_curr_seg;
+  82          void error_spin(u8 errorcode)
+  83          {
+  84   1          seg_set_str("ERROR   ");
+  85   1      
+  86   1          seg_display_content[7]=seg_decoder[errorcode%10];
+  87   1          errorcode/=10;
+  88   1          seg_display_content[6]=seg_decoder[errorcode%10];
+  89   1          errorcode/=10;
+  90   1          seg_display_content[5]=seg_decoder[errorcode%10];
+  91   1          errorcode/=10;
+  92   1      
+  93   1          while (1)
+  94   1          {
+  95   2              tmp_curr_seg++;
+  96   2              DISP_SEG(tmp_curr_seg & 0x7);
+  97   2              delay_ms(2);
+  98   2          }
+  99   1      }
+*** WARNING C291 IN LINE 65 OF Src\scheduler\scheduler.c: not every exit path returns a value
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    201    ----
-   CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =    125       8
+   CODE SIZE        =    464    ----
+   CONSTANT SIZE    =      9    ----
+   XDATA SIZE       =    128       8
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =      1    ----
+   DATA SIZE        =      1       3
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
    EDATA SIZE       =   ----    ----
    HDATA SIZE       =   ----    ----
    XDATA CONST SIZE =   ----    ----
-C51 COMPILER V9.60.0.0   SCHEDULER                                                         06/26/2022 20:01:52 PAGE 2   
-
    FAR CONST SIZE   =   ----    ----
 END OF MODULE INFORMATION.
 
+C51 COMPILER V9.60.0.0   SCHEDULER                                                         06/26/2022 20:35:33 PAGE 3   
 
-C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
+
+C51 COMPILATION COMPLETE.  2 WARNING(S),  0 ERROR(S)

@@ -71,6 +71,8 @@ P23 -> NOT -> EN_138_Decoder -> Segments
 
 extern XDATA u8 seg_display_content[8];
 extern XDATA u8 led_display_content;
+extern CODE u8 seg_decoder[128];
+void seg_set_str(const char* str);
 
 /*
 IMPORTANT NOTE!!!!!!!!!!!!!

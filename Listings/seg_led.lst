@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   SEG_LED                                                           06/26/2022 19:56:27 PAGE 1   
+C51 COMPILER V9.60.0.0   SEG_LED                                                           06/26/2022 20:28:01 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE SEG_LED
@@ -12,11 +12,44 @@ line level    source
    2          
    3          XDATA u8 seg_display_content[8];
    4          XDATA u8 led_display_content;
+   5          
+   6          CODE u8 seg_decoder[128] ={
+   7              0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7d, 0x07, 0x7f, 0x6f, 0x77,0x7c,0x39,0x5e,0x79,0x71,      //hex 
+             -0~F
+   8              0, 0, 0, 0, 0, 0, 0, 0,     0, 0, 0, 0, 0, 0, 0, 0,
+   9          
+  10              0x00, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x00, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, //spac
+             -e and others
+  11              0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7d, 0x07, 0x7f, 0x6f,                                     //numb
+             -ers
+  12              0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80,                                                       //othe
+             -rs
+  13              0x77,0x7c,0x39,0x5e,0x79,0x71,0x3d,0x76,0x0f,0x0e,0x75,0x38,0x37,0x54,0x5c,0x73,0x67,0x31,0x49,0x78,0x
+             -3e,0x1c,0x7e,0x64,0x6e,0x59, //A-Z
+  14              0x80, 0x80, 0x80, 0x80, 0x80, 0x80,                                                             //othe
+             -rs
+  15              0x77,0x7c,0x39,0x5e,0x79,0x71,0x3d,0x76,0x0f,0x0e,0x75,0x38,0x37,0x54,0x5c,0x73,0x67,0x31,0x49,0x78,0x
+             -3e,0x1c,0x7e,0x64,0x6e,0x59, //a-z
+  16              0x80, 0x80, 0x80, 0x80, 0x80                                                                    //othe
+             -rs
+  17          };
+  18          
+  19          void seg_set_str(const char* str)
+  20          {
+  21   1        seg_display_content[0] = seg_decoder[str[0]];
+  22   1          seg_display_content[1] = seg_decoder[str[1]];
+  23   1          seg_display_content[2] = seg_decoder[str[2]];
+  24   1          seg_display_content[3] = seg_decoder[str[3]];
+  25   1          seg_display_content[4] = seg_decoder[str[4]];
+  26   1          seg_display_content[5] = seg_decoder[str[5]];
+  27   1          seg_display_content[6] = seg_decoder[str[6]];
+  28   1          seg_display_content[7] = seg_decoder[str[7]];
+  29   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   ----    ----
-   CONSTANT SIZE    =   ----    ----
+   CODE SIZE        =    214    ----
+   CONSTANT SIZE    =    128    ----
    XDATA SIZE       =      9    ----
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
