@@ -233,7 +233,7 @@
               <RCB>
                 <Type>0</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x10000</Size>
+                <Size>0xffff</Size>
               </RCB>
               <RXB>
                 <Type>0</Type>
@@ -322,7 +322,7 @@
             <InterruptVectorAddress>0</InterruptVectorAddress>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define></Define>
+              <Define>STC</Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
@@ -410,6 +410,11 @@
               <FileName>interrupt_entry.a51</FileName>
               <FileType>2</FileType>
               <FilePath>.\Src\scheduler\interrupt_entry.a51</FilePath>
+            </File>
+            <File>
+              <FileName>memcpy.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Src\memcpy\memcpy.c</FilePath>
             </File>
           </Files>
         </Group>

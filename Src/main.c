@@ -20,5 +20,8 @@ void main()
     EA = 1;
     start_scheduler(1);
 
-    while(1);
+    while(1)
+    {   
+        DISP_SEG(0);
+    }
 }

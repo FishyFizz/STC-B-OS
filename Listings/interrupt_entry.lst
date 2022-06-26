@@ -1,4 +1,4 @@
-AX51 MACRO ASSEMBLER  INTERRUPT_ENTRY                                                       06/26/22 19:34:21 PAGE     1
+AX51 MACRO ASSEMBLER  INTERRUPT_ENTRY                                                       06/26/22 19:56:27 PAGE     1
 
 
 MACRO ASSEMBLER AX51 V3.15.3.0
@@ -22,42 +22,47 @@ LOC    OBJ             LINE     SOURCE
 ------                   12     RSEG INTERRUPT_HANDLER
                          13     
 000000                   14         TIMER_0_INT:
-                         15                     ;Save program state
-000000 C0E0              16             PUSH    ACC
-000002 C0F0              17             PUSH    B
-000004 C083              18             PUSH    DPH 
-000006 C082              19             PUSH    DPL 
-000008 C0D0              20             PUSH    PSW
-00000A C000              21             PUSH    0x00
-00000C C001              22             PUSH    0x01
-00000E C002              23             PUSH    0x02
-000010 C003              24             PUSH    0x03
-000012 C004              25             PUSH    0x04
-000014 C005              26             PUSH    0x05
-000016 C006              27             PUSH    0x06
-000018 C007              28             PUSH    0x07
-                         29     
-00001A 120000     E      30             CALL TIMER0_INTERRUPT
-                         31     
-                         32             ;Restore program state
-00001D D007              33             POP     0x07
-00001F D006              34             POP     0x06
-000021 D005              35             POP     0x05
-000023 D004              36             POP     0x04
-000025 D003              37             POP     0x03
-000027 D002              38             POP     0x02
-000029 D001              39             POP     0x01
-00002B D000              40             POP     0x00
-00002D D0D0              41             POP     PSW
-00002F D082              42             POP     DPL
-000031 D083              43             POP     DPH
-000033 D0F0              44             POP     B
-000035 D0E0              45             POP     ACC
-000037 32                46             RETI
-                         47     
-                         48     ;=============================================================  
-                         49     END
-AX51 MACRO ASSEMBLER  INTERRUPT_ENTRY                                                       06/26/22 19:34:21 PAGE     2
+                         15                     
+                         16             ;Save program state, PC already saved by hardware
+                         17             ;Size of interrupt frame is 15 bytes
+                         18             
+                         19             ;PUSH   PC_LOW
+                         20             ;PUSH   PC_HIGH
+000000 C0E0              21             PUSH    ACC
+000002 C0F0              22             PUSH    B
+000004 C083              23             PUSH    DPH 
+000006 C082              24             PUSH    DPL 
+000008 C0D0              25             PUSH    PSW
+00000A C000              26             PUSH    0x00
+00000C C001              27             PUSH    0x01
+00000E C002              28             PUSH    0x02
+000010 C003              29             PUSH    0x03
+000012 C004              30             PUSH    0x04
+000014 C005              31             PUSH    0x05
+000016 C006              32             PUSH    0x06
+000018 C007              33             PUSH    0x07
+                         34     
+00001A 120000     E      35             CALL TIMER0_INTERRUPT
+                         36     
+                         37             ;Restore program state
+00001D D007              38             POP     0x07
+00001F D006              39             POP     0x06
+000021 D005              40             POP     0x05
+000023 D004              41             POP     0x04
+000025 D003              42             POP     0x03
+000027 D002              43             POP     0x02
+000029 D001              44             POP     0x01
+00002B D000              45             POP     0x00
+00002D D0D0              46             POP     PSW
+00002F D082              47             POP     DPL
+000031 D083              48             POP     DPH
+000033 D0F0              49             POP     B
+000035 D0E0              50             POP     ACC
+000037 32                51             RETI
+                         52     
+                         53     ;=============================================================  
+                         54     END
+AX51 MACRO ASSEMBLER  INTERRUPT_ENTRY                                                       06/26/22 19:56:27 PAGE     2
 
 SYMBOL TABLE LISTING
 ------ ----- -------

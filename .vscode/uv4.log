@@ -1,0 +1,15 @@
+Build target 'Scheduler'
+compiling main.c...
+linking...
+*** WARNING L57: UNCALLED FUNCTION, IGNORED FOR OVERLAY PROCESS
+    NAME:    TIMER0_INTERRUPT/SCHEDULER
+
+*** WARNING L30: MEMORY SPACE OVERLAP
+    SEG:     ?TIMER?0000B
+    FROM:    C:00000BH   
+    TO:      C:00000EH   
+
+Program Size: data=17.0 xdata=142 const=0 code=1283
+creating hex file from ".\Objects\scheduler"...
+".\Objects\scheduler" - 0 Error(s), 2 Warning(s).
+Build Time Elapsed:  00:00:00

@@ -12,7 +12,12 @@ INTERRUPT_HANDLER SEGMENT CODE
 RSEG INTERRUPT_HANDLER
 
     TIMER_0_INT:
-		;Save program state
+		
+        ;Save program state, PC already saved by hardware
+        ;Size of interrupt frame is 15 bytes
+        
+        ;PUSH   PC_LOW
+        ;PUSH   PC_HIGH
         PUSH    ACC
         PUSH    B
         PUSH	DPH 

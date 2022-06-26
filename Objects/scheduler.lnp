@@ -4,7 +4,8 @@
 ".\Objects\timer.obj",
 ".\Objects\seg_led.obj",
 ".\Objects\STARTUP.obj",
-".\Objects\interrupt_entry.obj" 
+".\Objects\interrupt_entry.obj",
+".\Objects\memcpy.obj" 
 TO ".\Objects\scheduler" 
 
 PRINT(".\Listings\scheduler.map")
