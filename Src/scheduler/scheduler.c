@@ -1,6 +1,6 @@
 #include "scheduler.h"
 #include "../display/seg_led.h"
-#include "../memcpy/memcpy.h"
+#include "../mem/mem.h"
 
 XDATA u8 interrupt_frames[8][15];
 XDATA u8 current_process = 0;
@@ -21,6 +21,9 @@ void start_scheduler(u8 ms_per_interrupt)
         timer_settings.TIM_Run = ENABLE;
         Timer_Inilize(Timer0, &timer_settings);
     }
+
+    //Enable interrupts
+    EA = 1;
 }
 
 DATA u8 tmp_save_sp;
@@ -36,23 +39,24 @@ void timer0_interrupt()
     if(current_process >= 8)    //can't find a process to run
         error_spin(1);           
 
-
+    /*
     //Debug
     led_display_content = system_cycles>>4;
     DISP_LED();
-
+    */
+    
     //=========================================================================
     //Load interrupt frame of current process
     my_memcpy((u8 IDATA*)(tmp_save_sp-16), interrupt_frames[current_process], 15);
 }
 
-XDATA u8 tmp_process;
 u8 select_process()
 {
+    XDATA u8 tmp_process;
     tmp_process = current_process;
 
     //sequentially check other processes
-    while(++tmp_process != current_process)
+    while((tmp_process = NEXT(tmp_process)) != current_process)
         if(process_ready(tmp_process))
             return tmp_process;
 
@@ -67,20 +71,56 @@ u8 select_process()
 u8 process_ready(u8 pid)
 {
     //Check process exists
-    if(!(process_slot & BIT(pid)))
+    if(!PROC_EXISTS(pid))
         return 0;
-    
+
     return 1;
 }
 
-void start_process(PROCESS_ENTRY entry)
+u8 start_process(PROCESS_ENTRY entry)
 {
+    XDATA u8 tmp_process;
+    
+    //find a slot for new process
+    tmp_process = find_empty_slot();
+    
+    //create interrupt frame for process
+    memzero(interrupt_frames[tmp_process], 15);
+    interrupt_frames[tmp_process][INTFRM_ADDRLO] = ((u16)entry) & 0xff;
+    interrupt_frames[tmp_process][INTFRM_ADDRHI] = (((u16)entry)>>8) & 0xff;
 
+    //flag process existence
+    process_slot |= BIT(tmp_process);
+
+    return tmp_process;
+}
+
+u8 find_empty_slot()
+{
+    XDATA u8 tmp_process;
+
+    for(tmp_process = 0; tmp_process<8; tmp_process++)
+    {
+        if(!PROC_EXISTS(tmp_process))
+        {
+            tmp_process |= BIT(7); //set this bit to indicate that a valid slot is found
+            break;
+        }
+    }
+
+    //can't find a slot for new process
+    if(!(tmp_process&BIT(7)))
+        error_spin(2);
+
+    return (tmp_process & 0x07); //remove the flag before returning
 }
 
 XDATA u8 tmp_curr_seg;
 void error_spin(u8 errorcode)
 {
+    //disable interrupts (spin forever)
+    EA = 0;
+
     seg_set_str("ERROR   ");
 
     seg_display_content[7]=seg_decoder[errorcode%10];

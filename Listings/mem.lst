@@ -1,0 +1,47 @@
+C51 COMPILER V9.60.0.0   MEM                                                               06/26/2022 21:03:36 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MEM
+OBJECT MODULE PLACED IN .\Objects\mem.obj
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\mem\mem.c OMF2 OPTIMIZE(8,SPEED) BROWSE DEFINE(STC) DEBUG
+                    - PRINT(.\Listings\mem.lst) TABS(2) OBJECT(.\Objects\mem.obj)
+
+line level    source
+
+   1          #include "mem.h"
+   2          
+   3          void my_memcpy(u8* to, u8* from, u8 len)
+   4          {
+   5   1          do
+   6   1          {
+   7   2              --len;
+   8   2              to[len] = from[len];
+   9   2          } while (len);
+  10   1      }
+  11          
+  12          void memzero(u8* ptr, u8 len)
+  13          {
+  14   1          do
+  15   1          {
+  16   2              --len;
+  17   2              ptr[len] = 0;
+  18   2          } while (len);
+  19   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     69    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      10
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

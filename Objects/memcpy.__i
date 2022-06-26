@@ -1,0 +1,1 @@
+"Src\memcpy\memcpy.c" OMF2 OPTIMIZE (8,SPEED) BROWSE DEFINE (STC) DEBUG PRINT(.\Listings\memcpy.lst) TABS (2) OBJECT(.\Objects\memcpy.obj)

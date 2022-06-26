@@ -266,8 +266,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\Src\memcpy\memcpy.c</PathWithFileName>
-      <FilenameWithoutPath>memcpy.c</FilenameWithoutPath>
+      <PathWithFileName>.\Src\mem\mem.c</PathWithFileName>
+      <FilenameWithoutPath>mem.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

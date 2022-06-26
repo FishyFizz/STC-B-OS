@@ -13,15 +13,37 @@ void startup()
     delay_ms(100);
 }
 
-void main()
+void proc1()
+{
+    while(1)
+    {
+        led_display_content = 0x02;
+        DISP_LED();
+    }
+}
+
+void proc2()
+{
+    while(1)
+    {
+        led_display_content = 0x04;
+        DISP_LED();
+    }
+}
+
+void main() //also proc0
 {
     startup();
 
-    EA = 1;
+    //Atomic operations not yet implemented, must start process before scheduler
+    start_process(proc1);
+    start_process(proc2);
+
     start_scheduler(1);
 
     while(1)
-    {   
-        DISP_SEG(0);
+    {
+        led_display_content = 0x01;
+        DISP_LED();
     }
 }

@@ -412,9 +412,9 @@
               <FilePath>.\Src\scheduler\interrupt_entry.a51</FilePath>
             </File>
             <File>
-              <FileName>memcpy.c</FileName>
+              <FileName>mem.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Src\memcpy\memcpy.c</FilePath>
+              <FilePath>.\Src\mem\mem.c</FilePath>
             </File>
           </Files>
         </Group>

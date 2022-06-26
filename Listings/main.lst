@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   MAIN                                                              06/26/2022 20:35:32 PAGE 1   
+C51 COMPILER V9.60.0.0   MAIN                                                              06/26/2022 21:05:06 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
@@ -23,23 +23,47 @@ line level    source
   13   1          delay_ms(100);
   14   1      }
   15          
-  16          void main()
+  16          void proc1()
   17          {
-  18   1          startup();
-  19   1      
-  20   1          EA = 1;
-  21   1          start_scheduler(1);
-  22   1      
-  23   1          while(1)
-  24   1          {   
-  25   2              DISP_SEG(0);
-  26   2          }
-  27   1      }
+  18   1          while(1)
+  19   1          {
+  20   2              led_display_content = 0x02;
+  21   2              DISP_LED();
+  22   2          }
+  23   1      }
+  24          
+  25          void proc2()
+  26          {
+  27   1          while(1)
+  28   1          {
+  29   2              led_display_content = 0x04;
+  30   2              DISP_LED();
+  31   2          }
+  32   1      }
+  33          
+  34          void main() //also proc0
+  35          {
+  36   1          startup();
+  37   1      
+  38   1          //Atomic operations not yet implemented, must start process before scheduler
+  39   1          start_process(proc1);
+  40   1          start_process(proc2);
+  41   1      
+  42   1          start_scheduler(1);
+  43   1      
+  44   1          while(1)
+  45   1          {
+  46   2              led_display_content = 0x01;
+  47   2              DISP_LED();
+  48   2          }
+  49   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =     67    ----
+   CODE SIZE        =     99    ----
    CONSTANT SIZE    =   ----    ----
+C51 COMPILER V9.60.0.0   MAIN                                                              06/26/2022 21:05:06 PAGE 2   
+
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
