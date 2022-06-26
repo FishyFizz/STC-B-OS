@@ -21,4 +21,8 @@
     #define INTERRUPT   interrupt
 #endif
 
+#define BIT(x) ((u8)(1<<(x)))
+#define CLEARBIT(var, bit) {(var) &= ~(1<<(bit));}
+#define SETBIT(var, bit) {(var) |= (1<<(bit));}
+
 #endif //_GLOBAL_H_

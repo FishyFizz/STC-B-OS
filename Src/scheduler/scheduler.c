@@ -15,6 +15,9 @@ XDATA u8 proc_time_share[8] = {
     DEFAULT_TIMESLICES, DEFAULT_TIMESLICES
 };//This determines the number of timeslices assigned when each process is scheduled
 
+//Only processes with 0 sleep countdown can be scheduled
+XDATA u16 proc_sleep_countdown[8] ={0, 0, 0, 0, 0, 0, 0, 0};
+
 DATA u8 flag_nosched = 0;
 
 void start_scheduler(u8 ms_per_interrupt)
@@ -40,12 +43,13 @@ DATA u8 tmp_save_sp;
 void timer0_interrupt()
 {
     system_cycles++;
+    remaining_timeslices--;
+    decrement_sleep_counters();
 
     //Running atomic code, do not reschedule
     if(flag_nosched) return;
 
     //Current process has remaining time slices, do not reschedule
-    remaining_timeslices--;
     if(remaining_timeslices) return;
 //=============================================================================
 
@@ -92,6 +96,10 @@ u8 process_ready(u8 pid)
     if(!PROC_EXISTS(pid))
         return 0;
 
+    //Check process is not sleeping
+    if(proc_sleep_countdown[pid])
+        return 0;
+
     return 1;
 }
 
@@ -133,6 +141,22 @@ u8 find_empty_slot()
     return (tmp_process & 0x07); //remove the flag before returning
 }
 
+void decrement_sleep_counters()
+{
+    COUNTDOWN(proc_sleep_countdown[0]);
+    COUNTDOWN(proc_sleep_countdown[1]);
+    COUNTDOWN(proc_sleep_countdown[2]);
+    COUNTDOWN(proc_sleep_countdown[3]);
+    COUNTDOWN(proc_sleep_countdown[4]);
+    COUNTDOWN(proc_sleep_countdown[5]);
+    COUNTDOWN(proc_sleep_countdown[6]);
+    COUNTDOWN(proc_sleep_countdown[7]);
+    
+    LEDs &= 0xC0; //clear low 6 bits    
+    LEDs |= proc_sleep_countdown[1] >> 8; //Show sleep counter of process1 on 0-2 bits
+    LEDs |= (proc_sleep_countdown[0] >> 4) & (0x38); //Show sleep counter of process0 on 3-5 bits
+}
+
 //process code -> __yield(asm) -> __reschedule -> return to __yield -> return to new context
 void __reschedule()
 {
@@ -146,6 +170,25 @@ void __reschedule()
     my_memcpy((u8 IDATA*)(tmp_save_sp-16), interrupt_frames[current_process], 15);
 }
 
+u8 expected = 1;
+void tmp_errcheck()
+{
+    return;
+    expected = !expected;
+    if ((!expected) && (LEDs&0x80))
+        error_spin(21);
+    else if (expected && (!(LEDs&0x80)))
+        error_spin(20);
+    
+
+    if (proc_sleep_countdown[1]) error_spin(11);
+    if (proc_sleep_countdown[2]) error_spin(12);
+    if (proc_sleep_countdown[3]) error_spin(13);
+    if (proc_sleep_countdown[4]) error_spin(14);
+    if (proc_sleep_countdown[5]) error_spin(15);
+    if (proc_sleep_countdown[6]) error_spin(16);
+    if (proc_sleep_countdown[7]) error_spin(17);
+}
 
 XDATA u8 tmp_curr_seg;
 void error_spin(u8 errorcode)

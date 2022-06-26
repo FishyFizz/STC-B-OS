@@ -2,13 +2,12 @@
 #define _SCHEDULER_H_
 #include "../global.h"
 
-#define DEFAULT_TIMESLICES 255
+#define DEFAULT_TIMESLICES 50
 
 #define INTFRM_ADDRLO 0
 #define INTFRM_ADDRHI 1
 
 #define calc_TIM_from_ms_12t(t) ((u16)(65536 - (MAIN_Fosc / 12 / 1000 / 2 * t)))
-#define BIT(x) ((u8)(1<<(x)))
 #define NEXT(x) (((x)+1) & 0x7)
 #define PROC_EXISTS(x) ((process_slot & BIT(x))>0)
 
@@ -19,6 +18,8 @@ extern XDATA u8 process_slot;
 
 extern XDATA u8 remaining_timeslices;
 extern XDATA u8 proc_time_share[8];
+
+extern XDATA u16 proc_sleep_countdown[8];
 
 /*
 This variable MUST be in DATA memory, because write or read to this
@@ -32,9 +33,11 @@ extern DATA u8 flag_nosched;
 #define ATOMIC_START() {flag_nosched = 1;}
 #define ATOMIC_END() {flag_nosched = 0;}
 #define ATOMIC(atomic_code)\
+{\
     flag_nosched = 1;\
-    atomic_code\
-    flag_nosched = 0;
+    {atomic_code}\
+    flag_nosched = 0;\
+}
 
 typedef void (CODE *PROCESS_ENTRY)();
 
@@ -50,6 +53,9 @@ u8 process_ready(u8 pid);
 u8 find_empty_slot();
 u8 find_runnable();
 
+#define COUNTDOWN(x) {if(x) (x)--;}
+void decrement_sleep_counters();
+
 /*
 implementation of yield, switch to another process right away.
 Current processes state is needed to find the appropriate process
@@ -57,5 +63,15 @@ to switch to, so it can't be changed. Lock is needed when calling yield.
 */
 void __reschedule();
 extern void __yield();  //ASM code entrance
+#define yield() {__yield();}
+#define sleep(time) {\
+    ATOMIC(\
+        proc_sleep_countdown[current_process] = (time);\
+        tmp_errcheck();\
+        __yield();\
+    )\
+}
+
+void tmp_errcheck();
 
 #endif //_SCHEDULER_H_

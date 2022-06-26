@@ -5,11 +5,11 @@
 void startup()
 {
     seg_led_init();
-    led_display_content = 0xFF;
-    DISP_LED();
+    LED_SEG_SWITCH = 1;
+
+    LEDs = 0xFF;
     delay_ms(500);
-    led_display_content = 0x00;
-    DISP_LED();
+    LEDs = 0x00;
     delay_ms(100);
 }
 
@@ -17,8 +17,12 @@ void proc1()
 {
     while(1)
     {
-        led_display_content = 0x02;
-        DISP_LED();
+        //blink led6
+        sleep(2047);
+        LEDs |= 0x40;
+
+        sleep(2047);
+        LEDs &= 0xBF;
     }
 }
 
@@ -26,8 +30,8 @@ void proc2()
 {
     while(1)
     {
-        led_display_content = 0x04;
-        DISP_LED();
+        //spin
+        yield();
     }
 }
 
@@ -41,8 +45,11 @@ void main() //also proc0
 
     while(1)
     {
-        led_display_content = 0x01;
-        DISP_LED();
-        __yield();
+        //blink led7
+        sleep(1023);
+        LEDs |= 0x80;
+
+        sleep(1023);
+        LEDs &= 0x7F;
     }
 }
