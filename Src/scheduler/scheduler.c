@@ -133,6 +133,20 @@ u8 find_empty_slot()
     return (tmp_process & 0x07); //remove the flag before returning
 }
 
+//process code -> __yield(asm) -> __reschedule -> return to __yield -> return to new context
+void __reschedule()
+{
+    DATA u8 tmp_save_sp;
+    tmp_save_sp = SP;
+    my_memcpy(interrupt_frames[current_process], (u8 IDATA*)(tmp_save_sp-16), 15);
+
+    current_process = select_process();
+    remaining_timeslices = proc_time_share[current_process];
+
+    my_memcpy((u8 IDATA*)(tmp_save_sp-16), interrupt_frames[current_process], 15);
+}
+
+
 XDATA u8 tmp_curr_seg;
 void error_spin(u8 errorcode)
 {

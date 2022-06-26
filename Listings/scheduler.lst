@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   SCHEDULER                                                         06/26/2022 22:46:17 PAGE 1   
+C51 COMPILER V9.60.0.0   SCHEDULER                                                         06/26/2022 23:11:29 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE SCHEDULER
@@ -62,7 +62,7 @@ line level    source
   52   1          //Save interrupt frame of current process
   53   1          tmp_save_sp = SP;
   54   1          my_memcpy(interrupt_frames[current_process], (u8 IDATA*)(tmp_save_sp-16), 15);
-C51 COMPILER V9.60.0.0   SCHEDULER                                                         06/26/2022 22:46:17 PAGE 2   
+C51 COMPILER V9.60.0.0   SCHEDULER                                                         06/26/2022 23:11:29 PAGE 2   
 
   55   1          //=========================================================================
   56   1      
@@ -126,7 +126,7 @@ line level    source
  114   1      }
  115          
  116          u8 find_empty_slot()
-C51 COMPILER V9.60.0.0   SCHEDULER                                                         06/26/2022 22:46:17 PAGE 3   
+C51 COMPILER V9.60.0.0   SCHEDULER                                                         06/26/2022 23:11:29 PAGE 3   
 
  117          {
  118   1          XDATA u8 tmp_process;
@@ -147,37 +147,53 @@ line level    source
  133   1          return (tmp_process & 0x07); //remove the flag before returning
  134   1      }
  135          
- 136          XDATA u8 tmp_curr_seg;
- 137          void error_spin(u8 errorcode)
+ 136          //process code -> __yield(asm) -> __reschedule -> return to __yield -> return to new context
+ 137          void __reschedule()
  138          {
- 139   1          //disable interrupts (spin forever)
- 140   1          EA = 0;
- 141   1      
- 142   1          seg_set_str("ERROR   ");
- 143   1      
- 144   1          seg_display_content[7]=seg_decoder[errorcode%10];
- 145   1          errorcode/=10;
- 146   1          seg_display_content[6]=seg_decoder[errorcode%10];
- 147   1          errorcode/=10;
- 148   1          seg_display_content[5]=seg_decoder[errorcode%10];
- 149   1          errorcode/=10;
- 150   1      
- 151   1          while (1)
- 152   1          {
- 153   2              tmp_curr_seg++;
- 154   2              DISP_SEG(tmp_curr_seg & 0x7);
- 155   2              delay_ms(2);
- 156   2          }
- 157   1      }
+ 139   1          DATA u8 tmp_save_sp;
+ 140   1          tmp_save_sp = SP;
+ 141   1          my_memcpy(interrupt_frames[current_process], (u8 IDATA*)(tmp_save_sp-16), 15);
+ 142   1      
+ 143   1          current_process = select_process();
+ 144   1          remaining_timeslices = proc_time_share[current_process];
+ 145   1      
+ 146   1          my_memcpy((u8 IDATA*)(tmp_save_sp-16), interrupt_frames[current_process], 15);
+ 147   1      }
+ 148          
+ 149          
+ 150          XDATA u8 tmp_curr_seg;
+ 151          void error_spin(u8 errorcode)
+ 152          {
+ 153   1          //disable interrupts (spin forever)
+ 154   1          EA = 0;
+ 155   1      
+ 156   1          seg_set_str("ERROR   ");
+ 157   1      
+ 158   1          seg_display_content[7]=seg_decoder[errorcode%10];
+ 159   1          errorcode/=10;
+ 160   1          seg_display_content[6]=seg_decoder[errorcode%10];
+ 161   1          errorcode/=10;
+ 162   1          seg_display_content[5]=seg_decoder[errorcode%10];
+ 163   1          errorcode/=10;
+ 164   1      
+ 165   1          while (1)
+ 166   1          {
+ 167   2              tmp_curr_seg++;
+ 168   2              DISP_SEG(tmp_curr_seg & 0x7);
+ 169   2              delay_ms(2);
+ 170   2          }
+ 171   1      }
 *** WARNING C291 IN LINE 87 OF Src\scheduler\scheduler.c: not every exit path returns a value
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    658    ----
+   CODE SIZE        =    767    ----
    CONSTANT SIZE    =      9    ----
    XDATA SIZE       =    136      11
+C51 COMPILER V9.60.0.0   SCHEDULER                                                         06/26/2022 23:11:29 PAGE 4   
+
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =      2       3
+   DATA SIZE        =      2       4
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
    EDATA SIZE       =   ----    ----

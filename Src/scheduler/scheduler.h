@@ -2,7 +2,7 @@
 #define _SCHEDULER_H_
 #include "../global.h"
 
-#define DEFAULT_TIMESLICES 20
+#define DEFAULT_TIMESLICES 255
 
 #define INTFRM_ADDRLO 0
 #define INTFRM_ADDRHI 1
@@ -48,5 +48,14 @@ u8 __start_process(PROCESS_ENTRY entry);
 void error_spin(u8 errorcode);
 u8 process_ready(u8 pid);
 u8 find_empty_slot();
+u8 find_runnable();
+
+/*
+implementation of yield, switch to another process right away.
+Current processes state is needed to find the appropriate process
+to switch to, so it can't be changed. Lock is needed when calling yield.
+*/
+void __reschedule();
+extern void __yield();  //ASM code entrance
 
 #endif //_SCHEDULER_H_

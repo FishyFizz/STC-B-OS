@@ -1,4 +1,4 @@
-AX51 MACRO ASSEMBLER  INTERRUPT_ENTRY                                                       06/26/22 22:22:16 PAGE     1
+AX51 MACRO ASSEMBLER  INTERRUPT_ENTRY                                                       06/26/22 23:13:06 PAGE     1
 
 
 MACRO ASSEMBLER AX51 V3.15.3.0
@@ -9,7 +9,7 @@ ASSEMBLER INVOKED BY: C:\Program Files\Keil\C51\BIN\AX51.EXE Src\scheduler\inter
 LOC    OBJ             LINE     SOURCE
 
                           1     
-                          2     EXTERN CODE:NEAR (TIMER0_INTERRUPT)
+                          2     EXTERN CODE:NEAR (TIMER0_INTERRUPT, __RESCHEDULE)
                           3     
                           4     EXTERN DATA (FLAG_NOSCHED)
                           5             
@@ -23,48 +23,95 @@ LOC    OBJ             LINE     SOURCE
 ------                   13     INTERRUPT_HANDLER SEGMENT CODE
 ------                   14     RSEG INTERRUPT_HANDLER
                          15     
-000000                   16         TIMER_0_INT:
-                         17                     
-                         18             ;Save program state, PC already saved by hardware
-                         19             ;Size of interrupt frame is 15 bytes
-                         20             
-                         21             ;PUSH   PC_LOW
-                         22             ;PUSH   PC_HIGH
-000000 C0E0              23             PUSH    ACC
-000002 C0F0              24             PUSH    B
-000004 C083              25             PUSH    DPH 
-000006 C082              26             PUSH    DPL 
-000008 C0D0              27             PUSH    PSW
-00000A C000              28             PUSH    0x00
-00000C C001              29             PUSH    0x01
-00000E C002              30             PUSH    0x02
-000010 C003              31             PUSH    0x03
-000012 C004              32             PUSH    0x04
-000014 C005              33             PUSH    0x05
-000016 C006              34             PUSH    0x06
-000018 C007              35             PUSH    0x07
-                         36     
-00001A 120000     E      37             CALL TIMER0_INTERRUPT
-                         38     
-                         39             ;Restore program state
-00001D D007              40             POP     0x07
-00001F D006              41             POP     0x06
-000021 D005              42             POP     0x05
-000023 D004              43             POP     0x04
-000025 D003              44             POP     0x03
-000027 D002              45             POP     0x02
-000029 D001              46             POP     0x01
-00002B D000              47             POP     0x00
-00002D D0D0              48             POP     PSW
-00002F D082              49             POP     DPL
-000031 D083              50             POP     DPH
-000033 D0F0              51             POP     B
-000035 D0E0              52             POP     ACC
-000037 32                53             RETI
-                         54     
-                         55     ;=============================================================  
-                         56     END
-AX51 MACRO ASSEMBLER  INTERRUPT_ENTRY                                                       06/26/22 22:22:16 PAGE     2
+                         16         PUBLIC TIMER_0_INT
+000000                   17         TIMER_0_INT:
+                         18                     
+                         19             ;Save program state, PC already saved by hardware
+                         20             ;Size of interrupt frame is 15 bytes
+                         21             
+                         22             ;PUSH   PC_LOW
+                         23             ;PUSH   PC_HIGH
+000000 C0E0              24             PUSH    ACC
+000002 C0F0              25             PUSH    B
+000004 C083              26             PUSH    DPH 
+000006 C082              27             PUSH    DPL 
+000008 C0D0              28             PUSH    PSW
+00000A C000              29             PUSH    0x00
+00000C C001              30             PUSH    0x01
+00000E C002              31             PUSH    0x02
+000010 C003              32             PUSH    0x03
+000012 C004              33             PUSH    0x04
+000014 C005              34             PUSH    0x05
+000016 C006              35             PUSH    0x06
+000018 C007              36             PUSH    0x07
+                         37     
+00001A 120000     E      38             CALL TIMER0_INTERRUPT
+                         39     
+                         40             ;Restore program state
+00001D D007              41             POP     0x07
+00001F D006              42             POP     0x06
+000021 D005              43             POP     0x05
+000023 D004              44             POP     0x04
+000025 D003              45             POP     0x03
+000027 D002              46             POP     0x02
+000029 D001              47             POP     0x01
+00002B D000              48             POP     0x00
+00002D D0D0              49             POP     PSW
+00002F D082              50             POP     DPL
+000031 D083              51             POP     DPH
+000033 D0F0              52             POP     B
+000035 D0E0              53             POP     ACC
+000037 32                54             RETI
+                         55     
+                         56     ;============================================================= 
+                         57         PUBLIC __YIELD
+AX51 MACRO ASSEMBLER  INTERRUPT_ENTRY                                                       06/26/22 23:13:06 PAGE     2
+
+000038                   58         __YIELD:
+                         59     
+000038 750001     E      60             MOV FLAG_NOSCHED, #1
+                         61     
+                         62             ;Save program state, PC already saved by hardware
+                         63             ;Size of interrupt frame is 15 bytes
+                         64             
+                         65             ;PUSH   PC_LOW
+                         66             ;PUSH   PC_HIGH
+00003B C0E0              67             PUSH    ACC
+00003D C0F0              68             PUSH    B
+00003F C083              69             PUSH    DPH 
+000041 C082              70             PUSH    DPL 
+000043 C0D0              71             PUSH    PSW
+000045 C000              72             PUSH    0x00
+000047 C001              73             PUSH    0x01
+000049 C002              74             PUSH    0x02
+00004B C003              75             PUSH    0x03
+00004D C004              76             PUSH    0x04
+00004F C005              77             PUSH    0x05
+000051 C006              78             PUSH    0x06
+000053 C007              79             PUSH    0x07
+                         80     
+000055 120000     E      81             CALL __RESCHEDULE
+                         82     
+                         83             ;Restore program state
+000058 D007              84             POP     0x07
+00005A D006              85             POP     0x06
+00005C D005              86             POP     0x05
+00005E D004              87             POP     0x04
+000060 D003              88             POP     0x03
+000062 D002              89             POP     0x02
+000064 D001              90             POP     0x01
+000066 D000              91             POP     0x00
+000068 D0D0              92             POP     PSW
+00006A D082              93             POP     DPL
+00006C D083              94             POP     DPH
+00006E D0F0              95             POP     B
+000070 D0E0              96             POP     ACC
+                         97     
+000072 750000     E      98             MOV FLAG_NOSCHED, #0
+000075 22                99             RET
+                        100     
+                        101     END
+AX51 MACRO ASSEMBLER  INTERRUPT_ENTRY                                                       06/26/22 23:13:06 PAGE     3
 
 SYMBOL TABLE LISTING
 ------ ----- -------
@@ -72,12 +119,14 @@ SYMBOL TABLE LISTING
 
 N A M E                                   T Y P E  V A L U E     ATTRIBUTES
 
+__RESCHEDULE . . . . . . . . . . . . .    C  ADDR  -------       EXT
+__YIELD. . . . . . . . . . . . . . . .    C  ADDR  0038H     R   SEG=INTERRUPT_HANDLER
 ACC. . . . . . . . . . . . . . . . . .    D  ADDR  00E0H     A   
 B. . . . . . . . . . . . . . . . . . .    D  ADDR  00F0H     A   
 DPH. . . . . . . . . . . . . . . . . .    D  ADDR  0083H     A   
 DPL. . . . . . . . . . . . . . . . . .    D  ADDR  0082H     A   
 FLAG_NOSCHED . . . . . . . . . . . . .    D  ADDR  -------       EXT
-INTERRUPT_HANDLER. . . . . . . . . . .    C  SEG   000038H       REL=UNIT, ALN=BYTE
+INTERRUPT_HANDLER. . . . . . . . . . .    C  SEG   000076H       REL=UNIT, ALN=BYTE
 PSW. . . . . . . . . . . . . . . . . .    D  ADDR  00D0H     A   
 TIMER0_INTERRUPT . . . . . . . . . . .    C  ADDR  -------       EXT
 TIMER_0_INT. . . . . . . . . . . . . .    C  ADDR  0000H     R   SEG=INTERRUPT_HANDLER

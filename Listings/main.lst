@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   MAIN                                                              06/26/2022 22:46:17 PAGE 1   
+C51 COMPILER V9.60.0.0   MAIN                                                              06/26/2022 23:12:25 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
@@ -48,23 +48,22 @@ line level    source
   38   1          start_scheduler(1);
   39   1          start_process(proc1);
   40   1          start_process(proc2);
-  41   1          proc_time_share[1] = 40;
-  42   1          proc_time_share[2] = 80;
-  43   1      
-  44   1          while(1)
-  45   1          {
-  46   2              led_display_content = 0x01;
-  47   2              DISP_LED();
-  48   2          }
-  49   1      }
+  41   1      
+  42   1          while(1)
+  43   1          {
+  44   2              led_display_content = 0x01;
+  45   2              DISP_LED();
+  46   2              __yield();
+  47   2          }
+  48   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    121    ----
+   CODE SIZE        =    114    ----
    CONSTANT SIZE    =   ----    ----
-C51 COMPILER V9.60.0.0   MAIN                                                              06/26/2022 22:46:17 PAGE 2   
-
    XDATA SIZE       =   ----    ----
+C51 COMPILER V9.60.0.0   MAIN                                                              06/26/2022 23:12:25 PAGE 2   
+
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
