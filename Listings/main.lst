@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 06:04:13 PAGE 1   
+C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 07:03:42 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
@@ -11,151 +11,143 @@ line level    source
    1          #include "global.h"
    2          #include "scheduler/scheduler.h"
    3          #include "display/seg_led.h"
-   4          
-   5          void startup()
-   6          {
-   7   1          seg_led_init();
-   8   1          LED_SEG_SWITCH = 1;
-   9   1      
-  10   1          LEDs = 0xFF;
-  11   1          delay_ms(500);
-  12   1          LEDs = 0x00;
-  13   1          delay_ms(100);
-  14   1          led_display_content = 0;
-  15   1          seg_set_number(0);
-  16   1      }
-  17          
-  18          XDATA u32 conc_test = 0;
-  19          void proc1()
-  20          {
-  21   1          while(1)
-  22   1          {
-  23   2              sleep(100);
-  24   2              SETBIT(led_display_content, 0);
-  25   2      
-  26   2              sleep(100);
-  27   2              CLEARBIT(led_display_content, 0);
-  28   2          }
-  29   1      }
-  30          
-  31          void proc2()
-  32          {
-  33   1          while(1)
-  34   1          {
-  35   2              sleep(200);
-  36   2              SETBIT(led_display_content, 1);
-  37   2      
-  38   2              sleep(200);
-  39   2              CLEARBIT(led_display_content, 1);
-  40   2          }
-  41   1      }
-  42          
-  43          void proc3()
-  44          {
-  45   1          while(1)
-  46   1          {
-  47   2              sleep(400);
-  48   2              SETBIT(led_display_content, 2);
-  49   2      
-  50   2              sleep(400);
-  51   2              CLEARBIT(led_display_content, 2);
-  52   2          }
-  53   1      }
-  54          
-C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 06:04:13 PAGE 2   
+   4          #include "conc/semaphore.h"
+   5          
+   6          void startup()
+   7          {
+   8   1          seg_led_init();
+   9   1          LED_SEG_SWITCH = 1;
+  10   1      
+  11   1          LEDs = 0xFF;
+  12   1          delay_ms(500);
+  13   1          LEDs = 0x00;
+  14   1          delay_ms(100);
+  15   1          led_display_content = 0;
+  16   1          seg_set_number(0);
+  17   1      }
+  18          
+  19          XDATA u32 conc_test = 0;
+  20          void proc1()
+  21          {
+  22   1          while(1)
+  23   1          {
+  24   2              sleep(100);
+  25   2              SETBIT(led_display_content, 0);
+  26   2      
+  27   2              sleep(100);
+  28   2              CLEARBIT(led_display_content, 0);
+  29   2          }
+  30   1      }
+  31          
+  32          void proc2()
+  33          {
+  34   1          while(1)
+  35   1          {
+  36   2              sleep(200);
+  37   2              SETBIT(led_display_content, 1);
+  38   2      
+  39   2              sleep(200);
+  40   2              CLEARBIT(led_display_content, 1);
+  41   2          }
+  42   1      }
+  43          
+  44          void proc3()
+  45          {
+  46   1          while(1)
+  47   1          {
+  48   2              sleep(400);
+  49   2              SETBIT(led_display_content, 2);
+  50   2      
+  51   2              sleep(400);
+  52   2              CLEARBIT(led_display_content, 2);
+  53   2          }
+  54   1      }
+C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 07:03:42 PAGE 2   
 
-  55          void proc4()
-  56          {
-  57   1          while(1)
-  58   1          {
-  59   2              sleep(800);
-  60   2              SETBIT(led_display_content, 3);
-  61   2      
-  62   2              sleep(800);
-  63   2              CLEARBIT(led_display_content, 3);
-  64   2          }
-  65   1      }
-  66          
-  67          void proc5()
-  68          {
-  69   1          u16 inc_count = 0;
-  70   1          for(inc_count = 0; inc_count < 5000; inc_count++){
-  71   2              /*
-  72   2              conc_test in XDATA, reading, increment in register, write back
-  73   2              takes many CPU cycles to complete. During this time, a reschedule
-  74   2              can happen, leading to a result smaller than expected.
-  75   2              */
-  76   2              ATOMIC(conc_test++;)
-  77   2              //conc_test++;
-  78   2          }
-  79   1      
-  80   1          while(1) yield();
-  81   1      }
-  82          
-  83          void proc6()
-  84          {
-  85   1          u16 inc_count = 0;
-  86   1          for(inc_count = 0; inc_count < 5000; inc_count++){
-  87   2              ATOMIC(conc_test++;)
-  88   2              //conc_test++;
-  89   2          }
-  90   1          while(1) yield();
-  91   1      }
-  92          
-  93          void proc7()
-  94          {
-  95   1          u16 inc_count = 0;
-  96   1          for(inc_count = 0; inc_count < 5000; inc_count++){
-  97   2              ATOMIC(conc_test++;)
-  98   2              //conc_test++;
-  99   2          }
- 100   1          while(1) yield();
- 101   1      }
- 102          
- 103          XDATA u8 current = 0;
- 104          void main() //also proc0
- 105          {
- 106   1          startup();
- 107   1      
- 108   1          start_scheduler(1);
- 109   1          start_process(proc1);
- 110   1          start_process(proc2);
- 111   1          start_process(proc3);
- 112   1          start_process(proc4);
- 113   1          start_process(proc5);
- 114   1          start_process(proc6);
- 115   1          start_process(proc7);
- 116   1      
-C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 06:04:13 PAGE 3   
+  55          
+  56          void proc4()
+  57          {
+  58   1          while(1)
+  59   1          {
+  60   2              sleep(800);
+  61   2              SETBIT(led_display_content, 3);
+  62   2      
+  63   2              sleep(800);
+  64   2              CLEARBIT(led_display_content, 3);
+  65   2          }
+  66   1      }
+  67          
+  68          void proc5()
+  69          {
+  70   1          while(1)
+  71   1          {
+  72   2              sleep(1600);
+  73   2              SETBIT(led_display_content, 4);
+  74   2      
+  75   2              sleep(1600);
+  76   2              CLEARBIT(led_display_content, 4);
+  77   2          }
+  78   1      }
+  79          
+  80          void proc6()
+  81          {
+  82   1          sem_init(0,0);
+  83   1          sem_wait(0);
+  84   1          SETBIT(led_display_content, 6);
+  85   1          while(1) yield();
+  86   1      }
+  87          
+  88          void proc7()
+  89          {
+  90   1          sleep(2000);
+  91   1          SETBIT(led_display_content, 5);
+  92   1          sem_post(0);
+  93   1          while(1) yield();
+  94   1      }
+  95          
+  96          XDATA u8 current = 0;
+  97          void main() //also proc0
+  98          {
+  99   1          startup();
+ 100   1      
+ 101   1          start_scheduler(1);
+ 102   1          start_process(proc1);
+ 103   1          start_process(proc2);
+ 104   1          start_process(proc3);
+ 105   1          start_process(proc4);
+ 106   1          start_process(proc5);
+ 107   1          start_process(proc6);
+ 108   1          start_process(proc7);
+ 109   1      
+ 110   1          //DISPLAY DRIVER
+ 111   1          while(1)
+ 112   1          {
+ 113   2              seg_set_number(conc_test);
+ 114   2              switch(current)
+ 115   2              {
+ 116   3                  case 0: DISP_SEG(0)     current++; break;
+C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 07:03:42 PAGE 3   
 
- 117   1      
- 118   1          //DISPLAY DRIVER
- 119   1          while(1)
- 120   1          {
- 121   2              seg_set_number(conc_test);
- 122   2              switch(current)
- 123   2              {
- 124   3                  case 0: DISP_SEG(0)     current++; break;
- 125   3                  case 1: DISP_SEG(1)     current++; break;
- 126   3                  case 2: DISP_SEG(2)     current++; break;
- 127   3                  case 3: DISP_SEG(3)     current++; break;
- 128   3                  case 4: DISP_SEG(4)     current++; break;
- 129   3                  case 5: DISP_SEG(5)     current++; break;
- 130   3                  case 6: DISP_SEG(6)     current++; break;
- 131   3                  case 7: DISP_SEG(7)     current++; break;
- 132   3                  case 8: DISP_LED()      current=0; break;
- 133   3              }
- 134   2              yield(); 
- 135   2          }
- 136   1      }
+ 117   3                  case 1: DISP_SEG(1)     current++; break;
+ 118   3                  case 2: DISP_SEG(2)     current++; break;
+ 119   3                  case 3: DISP_SEG(3)     current++; break;
+ 120   3                  case 4: DISP_SEG(4)     current++; break;
+ 121   3                  case 5: DISP_SEG(5)     current++; break;
+ 122   3                  case 6: DISP_SEG(6)     current++; break;
+ 123   3                  case 7: DISP_SEG(7)     current++; break;
+ 124   3                  case 8: DISP_LED()      current=0; break;
+ 125   3              }
+ 126   2              yield(); 
+ 127   2          }
+ 128   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1074    ----
+   CODE SIZE        =   1015    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =      5    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =      6    ----
+   DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
    EDATA SIZE       =   ----    ----

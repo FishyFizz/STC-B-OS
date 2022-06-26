@@ -24,6 +24,7 @@
 #define BIT(x) ((u8)(1<<(x)))
 #define CLEARBIT(var, bit) {(var) &= ~(1<<(bit));}
 #define SETBIT(var, bit) {(var) |= (1<<(bit));}
+#define RSL(var) (((var)<<1) + ((var)>>7))
 
 extern XDATA u32 conc_test;
 

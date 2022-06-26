@@ -1,6 +1,7 @@
 #include "global.h"
 #include "scheduler/scheduler.h"
 #include "display/seg_led.h"
+#include "conc/semaphore.h"
 
 void startup()
 {
@@ -66,37 +67,29 @@ void proc4()
 
 void proc5()
 {
-    u16 inc_count = 0;
-    for(inc_count = 0; inc_count < 5000; inc_count++){
-        /*
-        conc_test in XDATA, reading, increment in register, write back
-        takes many CPU cycles to complete. During this time, a reschedule
-        can happen, leading to a result smaller than expected.
-        */
-        ATOMIC(conc_test++;)
-        //conc_test++;
-    }
+    while(1)
+    {
+        sleep(1600);
+        SETBIT(led_display_content, 4);
 
-    while(1) yield();
+        sleep(1600);
+        CLEARBIT(led_display_content, 4);
+    }
 }
 
 void proc6()
 {
-    u16 inc_count = 0;
-    for(inc_count = 0; inc_count < 5000; inc_count++){
-        ATOMIC(conc_test++;)
-        //conc_test++;
-    }
+    sem_init(0,0);
+    sem_wait(0);
+    SETBIT(led_display_content, 6);
     while(1) yield();
 }
 
 void proc7()
 {
-    u16 inc_count = 0;
-    for(inc_count = 0; inc_count < 5000; inc_count++){
-        ATOMIC(conc_test++;)
-        //conc_test++;
-    }
+    sleep(2000);
+    SETBIT(led_display_content, 5);
+    sem_post(0);
     while(1) yield();
 }
 
@@ -113,7 +106,6 @@ void main() //also proc0
     start_process(proc5);
     start_process(proc6);
     start_process(proc7);
-
 
     //DISPLAY DRIVER
     while(1)

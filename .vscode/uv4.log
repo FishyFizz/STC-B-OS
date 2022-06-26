@@ -1,21 +1,13 @@
 Build target 'Scheduler'
-compiling main.c...
+compiling scheduler.c...
+Src\scheduler\scheduler.c(92): warning C291: not every exit path returns a value
 linking...
-*** WARNING L57: UNCALLED FUNCTION, IGNORED FOR OVERLAY PROCESS
-    NAME:    TIMER0_INTERRUPT/SCHEDULER
-
-*** WARNING L57: UNCALLED FUNCTION, IGNORED FOR OVERLAY PROCESS
-    NAME:    __RESCHEDULE/SCHEDULER
-
-*** WARNING L57: UNCALLED FUNCTION, IGNORED FOR OVERLAY PROCESS
-    NAME:    SEG_LED_DRIVER_LOOP/SEG_LED
-
 *** WARNING L30: MEMORY SPACE OVERLAP
     SEG:     ?TIMER?0000B
     FROM:    C:00000BH   
     TO:      C:00000EH   
 
-Program Size: data=25.0 xdata=176 const=137 code=4131
+Program Size: data=47.0 xdata=204 const=137 code=5789
 creating hex file from ".\Objects\scheduler"...
-".\Objects\scheduler" - 0 Error(s), 4 Warning(s).
+".\Objects\scheduler" - 0 Error(s), 2 Warning(s).
 Build Time Elapsed:  00:00:00

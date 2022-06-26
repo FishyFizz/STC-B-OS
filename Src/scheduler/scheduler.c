@@ -1,6 +1,7 @@
 #include "scheduler.h"
 #include "../display/seg_led.h"
 #include "../mem/mem.h"
+#include "../conc/semaphore.h"
 
 XDATA u8 interrupt_frames[8][15];
 XDATA u8 current_process = 0;
@@ -100,6 +101,10 @@ u8 process_ready(u8 pid)
     if(proc_sleep_countdown[pid])
         return 0;
 
+    //Check process is not waiting for semaphore
+    if(proc_waiting & BIT(pid))
+        return 0;
+
     return 1;
 }
 
@@ -152,9 +157,7 @@ void decrement_sleep_counters()
     COUNTDOWN(proc_sleep_countdown[6]);
     COUNTDOWN(proc_sleep_countdown[7]);
     
-    LEDs &= 0xC0; //clear low 6 bits    
-    LEDs |= proc_sleep_countdown[1] >> 8; //Show sleep counter of process1 on 0-2 bits
-    LEDs |= (proc_sleep_countdown[0] >> 4) & (0x38); //Show sleep counter of process0 on 3-5 bits
+    sleep_check();
 }
 
 //process code -> __yield(asm) -> __reschedule -> return to __yield -> return to new context
@@ -172,25 +175,27 @@ void __reschedule()
 }
 
 u8 expected = 1;
-void tmp_errcheck()
+void sleep_check()
 {
-    return;
-    expected = !expected;
-    if ((!expected) && (LEDs&0x80))
-        error_spin(21);
-    else if (expected && (!(LEDs&0x80)))
-        error_spin(20);
-    
-
-    if (proc_sleep_countdown[1]) error_spin(11);
-    if (proc_sleep_countdown[2]) error_spin(12);
-    if (proc_sleep_countdown[3]) error_spin(13);
-    if (proc_sleep_countdown[4]) error_spin(14);
-    if (proc_sleep_countdown[5]) error_spin(15);
-    if (proc_sleep_countdown[6]) error_spin(16);
-    if (proc_sleep_countdown[7]) error_spin(17);
+    if (proc_sleep_countdown[0]) error_spin(10);
+    //if (proc_sleep_countdown[1]) error_spin(11);
+    //if (proc_sleep_countdown[2]) error_spin(12);
+    //if (proc_sleep_countdown[3]) error_spin(13);
+    //if (proc_sleep_countdown[4]) error_spin(14);
+    //if (proc_sleep_countdown[5]) error_spin(15);
+    //if (proc_sleep_countdown[6]) error_spin(16);
+    //if (proc_sleep_countdown[7]) error_spin(17);
 }
 
+/*
+    ERRCODES:
+
+    1:  Scheduler can't find a process to run.
+    2:  Process slots full, can't create more.
+    10-17:  Process 0-7 should not be sleeping, but has a sleep countdown.
+            You have to edit sleep_check according to your process' behaviours.
+    20: Semaphore out of bound.
+*/
 XDATA u8 tmp_curr_seg;
 void error_spin(u8 errorcode)
 {

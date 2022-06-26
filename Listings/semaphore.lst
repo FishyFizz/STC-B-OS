@@ -1,0 +1,101 @@
+C51 COMPILER V9.60.0.0   SEMAPHORE                                                         06/27/2022 07:04:23 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE SEMAPHORE
+OBJECT MODULE PLACED IN .\Objects\semaphore.obj
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\conc\semaphore.c OMF2 OPTIMIZE(0,SPEED) BROWSE DEFINE(STC
+                    -) DEBUG PRINT(.\Listings\semaphore.lst) TABS(2) OBJECT(.\Objects\semaphore.obj)
+
+line level    source
+
+   1          #include "semaphore.h"
+   2          
+   3          XDATA char semaphores[MAX_SEMAPHORES];
+   4          XDATA u8 proc_sem_wait_flag[MAX_SEMAPHORES];
+   5          XDATA u8 sem_wake_round[MAX_SEMAPHORES];
+   6          XDATA u8 proc_waiting = 0;
+   7          
+   8          void sem_init(u8 sem_id, char val)
+   9          {
+  10   1          if (sem_id >= MAX_SEMAPHORES)
+  11   1              error_spin(20);
+  12   1      
+  13   1          ATOMIC(
+  17   1              proc_sem_wait_flag[sem_id] = 0;
+  17   1              sem_wake_round[sem_id] = 1;
+  17   1              semaphores[sem_id] = val;
+  17   1          )
+  18   1      }
+  19          
+  20          XDATA u8 select_wake;
+  21          void sem_post(u8 sem_id)
+  22          {
+  23   1          ATOMIC_START();
+  24   1      
+  25   1          //No process is waiting, only increment semaphore
+  26   1          if(!proc_sem_wait_flag[sem_id])
+  27   1          {
+  28   2              semaphores[sem_id]++;
+  29   2              goto SEM_POST_END;
+  30   2          }
+  31   1      
+  32   1          //Find first process waiting on the semaphore
+  33   1          select_wake = RSL(sem_wake_round[sem_id]);
+  34   1          while ((select_wake & proc_sem_wait_flag[sem_id]) == 0)
+  35   1              select_wake = RSL(select_wake);
+  36   1      
+  37   1          //Remove the waiting flag of the process
+  38   1          proc_sem_wait_flag[sem_id] &= ~select_wake;
+  39   1          proc_waiting &= ~select_wake;
+  40   1      
+  41   1          //Record the last waked process
+  42   1          sem_wake_round[sem_id] = select_wake;
+  43   1      
+  44   1          SEM_POST_END:;
+  45   1          ATOMIC_END();
+  46   1      }
+  47          
+  48          void sem_wait(u8 sem_id)
+  49          {
+  50   1          ATOMIC_START();
+  51   1      
+  52   1          //semaphore currently idle, decrement value and return.
+  53   1          if(semaphores[sem_id])
+  54   1          {
+C51 COMPILER V9.60.0.0   SEMAPHORE                                                         06/27/2022 07:04:23 PAGE 2   
+
+  55   2              semaphores[sem_id] --;
+  56   2              goto SEM_WAIT_END;
+  57   2          }
+  58   1      
+  59   1          /*  
+  60   1              set current process waiting on semaphore, yield
+  61   1              (and the process won't be selected by scheduler 
+  62   1              until wait flag is cleared by some sem_post)
+  63   1          */
+  64   1      
+  65   1          proc_sem_wait_flag[sem_id] |= BIT(current_process);
+  66   1          proc_waiting |= BIT(current_process);
+  67   1          yield();
+  68   1      
+  69   1          SEM_WAIT_END:;
+  70   1          ATOMIC_END();
+  71   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    422    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     26    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

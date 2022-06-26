@@ -67,11 +67,11 @@ extern void __yield();  //ASM code entrance
 #define sleep(time) {\
     ATOMIC(\
         proc_sleep_countdown[current_process] = (time);\
-        tmp_errcheck();\
+        sleep_check();\
         __yield();\
     )\
 }
 
-void tmp_errcheck();
+void sleep_check();
 
 #endif //_SCHEDULER_H_

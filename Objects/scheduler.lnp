@@ -5,7 +5,8 @@
 ".\Objects\seg_led.obj",
 ".\Objects\STARTUP.obj",
 ".\Objects\interrupt_entry.obj",
-".\Objects\mem.obj" 
+".\Objects\mem.obj",
+".\Objects\semaphore.obj" 
 TO ".\Objects\scheduler" 
 
 PRINT(".\Listings\scheduler.map") DISABLEWARNING (57) 

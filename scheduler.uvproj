@@ -416,6 +416,11 @@
               <FileType>1</FileType>
               <FilePath>.\Src\mem\mem.c</FilePath>
             </File>
+            <File>
+              <FileName>semaphore.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Src\conc\semaphore.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
