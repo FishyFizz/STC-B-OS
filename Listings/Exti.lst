@@ -1,10 +1,10 @@
-C51 COMPILER V9.60.0.0   EXTI                                                              06/28/2022 03:06:35 PAGE 1   
+C51 COMPILER V9.60.0.0   EXTI                                                              06/28/2022 06:41:08 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE EXTI
 OBJECT MODULE PLACED IN .\Objects\Exti.obj
-COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\stc\Exti.c OMF2 OPTIMIZE(0,SPEED) BROWSE DEFINE(STC) DEBU
-                    -G PRINT(.\Listings\Exti.lst) TABS(2) OBJECT(.\Objects\Exti.obj)
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\stc\Exti.c LARGE OMF2 OPTIMIZE(0,SPEED) BROWSE DEFINE(STC
+                    -) DEBUG PRINT(.\Listings\Exti.lst) TABS(2) OBJECT(.\Objects\Exti.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   52   1        if(EXT >  EXT_INT4) return 1; //空操作
   53   1        
   54   1        if(EXT == EXT_INT0) //外中断0
-C51 COMPILER V9.60.0.0   EXTI                                                              06/28/2022 03:06:35 PAGE 2   
+C51 COMPILER V9.60.0.0   EXTI                                                              06/28/2022 06:41:08 PAGE 2   
 
   55   1        {
   56   2          if(INTx->EXTI_Interrupt == ENABLE)    EX0 = 1;  //允许中断
@@ -110,11 +110,11 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    386    ----
+   CODE SIZE        =    457    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =   ----    ----
+   XDATA SIZE       =      4    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =      4    ----
+   DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
    EDATA SIZE       =   ----    ----

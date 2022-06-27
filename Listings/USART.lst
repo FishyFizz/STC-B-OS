@@ -1,10 +1,10 @@
-C51 COMPILER V9.60.0.0   USART                                                             06/28/2022 03:06:35 PAGE 1   
+C51 COMPILER V9.60.0.0   USART                                                             06/28/2022 06:41:08 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE USART
 OBJECT MODULE PLACED IN .\Objects\USART.obj
-COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\stc\USART.C OMF2 OPTIMIZE(0,SPEED) BROWSE DEFINE(STC) DEB
-                    -UG PRINT(.\Listings\USART.lst) TABS(2) OBJECT(.\Objects\USART.obj)
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\stc\USART.C LARGE OMF2 OPTIMIZE(0,SPEED) BROWSE DEFINE(ST
+                    -C) DEBUG PRINT(.\Listings\USART.lst) TABS(2) OBJECT(.\Objects\USART.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   52   4              ET1 = 0;  //禁止中断
   53   4              TMOD &= ~0x40;  //定时
   54   4              INT_CLKO &= ~0x02;  //不输出时钟
-C51 COMPILER V9.60.0.0   USART                                                             06/28/2022 03:06:35 PAGE 2   
+C51 COMPILER V9.60.0.0   USART                                                             06/28/2022 06:41:08 PAGE 2   
 
   55   4              TR1  = 1;
   56   4            }
@@ -126,7 +126,7 @@ line level    source
  114   3            AUXR |=  (1<<2);  //Timer2 set as 1T mode
  115   3            TH2 = (u8)(j>>8);
  116   3            TL2 = (u8)j;
-C51 COMPILER V9.60.0.0   USART                                                             06/28/2022 03:06:35 PAGE 3   
+C51 COMPILER V9.60.0.0   USART                                                             06/28/2022 06:41:08 PAGE 3   
 
  117   3            IE2  &= ~(1<<2);  //禁止中断
  118   3            AUXR |=  (1<<4);  //Timer run enable
@@ -190,7 +190,7 @@ line level    source
  176          }
  177          */
  178          
-C51 COMPILER V9.60.0.0   USART                                                             06/28/2022 03:06:35 PAGE 4   
+C51 COMPILER V9.60.0.0   USART                                                             06/28/2022 06:41:08 PAGE 4   
 
  179          
  180          /********************* UART1中断函数************************/
@@ -227,11 +227,11 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1426    ----
+   CODE SIZE        =   1826    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =    512    ----
+   XDATA SIZE       =    543    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =     31    ----
+   DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
    EDATA SIZE       =   ----    ----

@@ -1,10 +1,10 @@
-C51 COMPILER V9.60.0.0   ERROR                                                             06/28/2022 03:06:34 PAGE 1   
+C51 COMPILER V9.60.0.0   ERROR                                                             06/28/2022 06:41:08 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE ERROR
 OBJECT MODULE PLACED IN .\Objects\error.obj
-COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\error\error.c OMF2 OPTIMIZE(0,SPEED) BROWSE DEFINE(STC) D
-                    -EBUG PRINT(.\Listings\error.lst) TABS(2) OBJECT(.\Objects\error.obj)
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\error\error.c LARGE OMF2 OPTIMIZE(0,SPEED) BROWSE DEFINE(
+                    -STC) DEBUG PRINT(.\Listings\error.lst) TABS(2) OBJECT(.\Objects\error.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   52   1          errorcode/=10;
   53   1          seg_display_content[5]=seg_decoder[errorcode%10];
   54   1          errorcode/=10;
-C51 COMPILER V9.60.0.0   ERROR                                                             06/28/2022 03:06:34 PAGE 2   
+C51 COMPILER V9.60.0.0   ERROR                                                             06/28/2022 06:41:08 PAGE 2   
 
   55   1      
   56   1          while (--spin)
@@ -80,11 +80,11 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    522    ----
+   CODE SIZE        =    616    ----
    CONSTANT SIZE    =     18    ----
-   XDATA SIZE       =     11    ----
+   XDATA SIZE       =     13    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =      2    ----
+   DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
    EDATA SIZE       =   ----    ----

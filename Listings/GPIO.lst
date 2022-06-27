@@ -1,10 +1,10 @@
-C51 COMPILER V9.60.0.0   GPIO                                                              06/28/2022 03:06:35 PAGE 1   
+C51 COMPILER V9.60.0.0   GPIO                                                              06/28/2022 06:41:08 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE GPIO
 OBJECT MODULE PLACED IN .\Objects\GPIO.obj
-COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\stc\GPIO.c OMF2 OPTIMIZE(0,SPEED) BROWSE DEFINE(STC) DEBU
-                    -G PRINT(.\Listings\GPIO.lst) TABS(2) OBJECT(.\Objects\GPIO.obj)
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\stc\GPIO.c LARGE OMF2 OPTIMIZE(0,SPEED) BROWSE DEFINE(STC
+                    -) DEBUG PRINT(.\Listings\GPIO.lst) TABS(2) OBJECT(.\Objects\GPIO.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   52   1        {
   53   2          if(GPIOx->Mode == GPIO_PullUp)    P4M1 &= ~GPIOx->Pin,  P4M0 &= ~GPIOx->Pin;   //上拉准双向口
   54   2          if(GPIOx->Mode == GPIO_HighZ)   P4M1 |=  GPIOx->Pin,  P4M0 &= ~GPIOx->Pin;   //浮空输入
-C51 COMPILER V9.60.0.0   GPIO                                                              06/28/2022 03:06:35 PAGE 2   
+C51 COMPILER V9.60.0.0   GPIO                                                              06/28/2022 06:41:08 PAGE 2   
 
   55   2          if(GPIOx->Mode == GPIO_OUT_OD)    P4M1 |=  GPIOx->Pin,  P4M0 |=  GPIOx->Pin;   //开漏输出
   56   2          if(GPIOx->Mode == GPIO_OUT_PP)    P4M1 &= ~GPIOx->Pin,  P4M0 |=  GPIOx->Pin;   //推挽输出
@@ -79,11 +79,11 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1535    ----
+   CODE SIZE        =   1929    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =   ----    ----
+   XDATA SIZE       =      4    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =      4    ----
+   DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
    EDATA SIZE       =   ----    ----

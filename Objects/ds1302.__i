@@ -1,1 +1,0 @@
-"Src\ds1302\ds1302.c" OMF2 OPTIMIZE (0,SPEED) BROWSE DEFINE (STC) DEBUG PRINT(.\Listings\ds1302.lst) TABS (2) OBJECT(.\Objects\ds1302.obj)

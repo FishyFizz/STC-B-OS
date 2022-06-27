@@ -1,10 +1,10 @@
-C51 COMPILER V9.60.0.0   RANDOM                                                            06/28/2022 03:06:35 PAGE 1   
+C51 COMPILER V9.60.0.0   RANDOM                                                            06/28/2022 06:41:09 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE RANDOM
 OBJECT MODULE PLACED IN .\Objects\random.obj
-COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\random\random.c OMF2 OPTIMIZE(0,SPEED) BROWSE DEFINE(STC)
-                    - DEBUG PRINT(.\Listings\random.lst) TABS(2) OBJECT(.\Objects\random.obj)
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\random\random.c LARGE OMF2 OPTIMIZE(0,SPEED) BROWSE DEFIN
+                    -E(STC) DEBUG PRINT(.\Listings\random.lst) TABS(2) OBJECT(.\Objects\random.obj)
 
 line level    source
 

@@ -1,10 +1,10 @@
-C51 COMPILER V9.60.0.0   MAIN                                                              06/28/2022 06:28:06 PAGE 1   
+C51 COMPILER V9.60.0.0   MAIN                                                              06/28/2022 06:41:07 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
 OBJECT MODULE PLACED IN .\Objects\main.obj
-COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\main.c OMF2 OPTIMIZE(0,SPEED) BROWSE DEFINE(STC) DEBUG PR
-                    -INT(.\Listings\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\main.c LARGE OMF2 OPTIMIZE(0,SPEED) BROWSE DEFINE(STC) DE
+                    -BUG PRINT(.\Listings\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   52          
   53          void proc1()
   54          {
-C51 COMPILER V9.60.0.0   MAIN                                                              06/28/2022 06:28:06 PAGE 2   
+C51 COMPILER V9.60.0.0   MAIN                                                              06/28/2022 06:41:07 PAGE 2   
 
   55   1          ds1302_init();
   56   1      

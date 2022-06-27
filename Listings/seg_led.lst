@@ -1,10 +1,10 @@
-C51 COMPILER V9.60.0.0   SEG_LED                                                           06/28/2022 03:06:34 PAGE 1   
+C51 COMPILER V9.60.0.0   SEG_LED                                                           06/28/2022 06:41:08 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE SEG_LED
 OBJECT MODULE PLACED IN .\Objects\seg_led.obj
-COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\display\seg_led.c OMF2 OPTIMIZE(0,SPEED) BROWSE DEFINE(ST
-                    -C) DEBUG PRINT(.\Listings\seg_led.lst) TABS(2) OBJECT(.\Objects\seg_led.obj)
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\display\seg_led.c LARGE OMF2 OPTIMIZE(0,SPEED) BROWSE DEF
+                    -INE(STC) DEBUG PRINT(.\Listings\seg_led.lst) TABS(2) OBJECT(.\Objects\seg_led.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   44          void seg_led_scan_next()
   45          {
   46   1          switch(seg_led_current)
-C51 COMPILER V9.60.0.0   SEG_LED                                                           06/28/2022 03:06:34 PAGE 2   
+C51 COMPILER V9.60.0.0   SEG_LED                                                           06/28/2022 06:41:08 PAGE 2   
 
   47   1          {
   48   2              case 0: DISP_SEG(0)     seg_led_current++; break;
@@ -89,11 +89,11 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1129    ----
+   CODE SIZE        =   1252    ----
    CONSTANT SIZE    =    128    ----
-   XDATA SIZE       =     10    ----
+   XDATA SIZE       =     17    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =      7    ----
+   DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
    EDATA SIZE       =   ----    ----
