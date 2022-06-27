@@ -6,7 +6,7 @@ linking...
     FROM:    C:00000BH   
     TO:      C:00000EH   
 
-Program Size: data=120.0 xdata=929 const=146 code=11654
+Program Size: data=123.0 xdata=926 const=146 code=12240
 creating hex file from ".\Objects\scheduler"...
 ".\Objects\scheduler" - 0 Error(s), 1 Warning(s).
 Build Time Elapsed:  00:00:00

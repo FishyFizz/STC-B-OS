@@ -1,0 +1,175 @@
+C51 COMPILER V9.60.0.0   DS1302                                                            06/28/2022 06:22:24 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE DS1302
+OBJECT MODULE PLACED IN .\Objects\ds1302.obj
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\ds1302\ds1302.c OMF2 OPTIMIZE(0,SPEED) BROWSE DEFINE(STC)
+                    - DEBUG PRINT(.\Listings\ds1302.lst) TABS(2) OBJECT(.\Objects\ds1302.obj)
+
+line level    source
+
+   1          #include "ds1302.h"
+   2          #include "../display/seg_led.h"
+   3          
+   4          XDATA u8 __spin;
+*** WARNING C231 IN LINE 4 OF Src\ds1302\ds1302.c: '__spin': redefinition
+   5          
+   6          void __ds1302_writebyte(u8 addr, u8 write)
+   7          {
+   8   1          ds1302_dout();
+   9   1      
+  10   1          DS1302_RST = 1; //Initiate communication
+  11   1      
+  12   1          DS1302_IO = 0;  //WRITE
+  13   1          ds1302_clockpulse();
+  14   1      
+  15   1          //address
+  16   1          {
+  17   2              DS1302_IO = GETBIT(addr,0);
+  18   2              ds1302_clockpulse();
+  19   2      
+  20   2              DS1302_IO = GETBIT(addr,1);
+  21   2              ds1302_clockpulse();
+  22   2      
+  23   2              DS1302_IO = GETBIT(addr,2);
+  24   2              ds1302_clockpulse();
+  25   2      
+  26   2              DS1302_IO = GETBIT(addr,3);
+  27   2              ds1302_clockpulse();
+  28   2      
+  29   2              DS1302_IO = GETBIT(addr,4);
+  30   2              ds1302_clockpulse();
+  31   2      
+  32   2              DS1302_IO = GETBIT(addr,5); // 0-> Time, 1-> RAM
+  33   2              ds1302_clockpulse();
+  34   2          }
+  35   1      
+  36   1          DS1302_IO = 1;
+  37   1          ds1302_clockpulse();
+  38   1      
+  39   1          
+  40   1          //data
+  41   1          {
+  42   2              DS1302_IO = GETBIT(write,0);
+  43   2              ds1302_clockpulse();
+  44   2      
+  45   2              DS1302_IO = GETBIT(write,1);
+  46   2              ds1302_clockpulse();
+  47   2      
+  48   2              DS1302_IO = GETBIT(write,2);
+  49   2              ds1302_clockpulse();
+  50   2      
+  51   2              DS1302_IO = GETBIT(write,3);
+  52   2              ds1302_clockpulse();
+  53   2      
+C51 COMPILER V9.60.0.0   DS1302                                                            06/28/2022 06:22:24 PAGE 2   
+
+  54   2              DS1302_IO = GETBIT(write,4);
+  55   2              ds1302_clockpulse();
+  56   2      
+  57   2              DS1302_IO = GETBIT(write,5);
+  58   2              ds1302_clockpulse();
+  59   2      
+  60   2              DS1302_IO = GETBIT(write,6);
+  61   2              ds1302_clockpulse();
+  62   2      
+  63   2              DS1302_IO = GETBIT(write,7);
+  64   2              ds1302_clockpulse();
+  65   2          }
+  66   1      
+  67   1      
+  68   1          //reset pins
+  69   1          DS1302_SCLK = 0;
+  70   1          DS1302_IO = 0;
+  71   1          DS1302_RST = 0;
+  72   1      }
+  73          
+  74          u8 __ds1302_readbyte(u8 addr)
+  75          {
+  76   1          XDATA u8 read = 0;
+  77   1      
+  78   1          ds1302_dout();
+  79   1      
+  80   1          DS1302_RST = 1; //Initiate communication
+  81   1      
+  82   1          DS1302_IO = 1;  //READ
+  83   1          ds1302_clockpulse();
+  84   1      
+  85   1          //address
+  86   1          {
+  87   2              DS1302_IO = GETBIT(addr,0);
+  88   2              ds1302_clockpulse();
+  89   2      
+  90   2              DS1302_IO = GETBIT(addr,1);
+  91   2              ds1302_clockpulse();
+  92   2      
+  93   2              DS1302_IO = GETBIT(addr,2);
+  94   2              ds1302_clockpulse();
+  95   2      
+  96   2              DS1302_IO = GETBIT(addr,3);
+  97   2              ds1302_clockpulse();
+  98   2      
+  99   2              DS1302_IO = GETBIT(addr,4);
+ 100   2              ds1302_clockpulse();
+ 101   2      
+ 102   2              DS1302_IO = GETBIT(addr,5); // 0-> Time, 1-> RAM
+ 103   2              ds1302_clockpulse();
+ 104   2          }
+ 105   1      
+ 106   1          DS1302_IO = 1;
+ 107   1          ds1302_clockpulse();
+ 108   1      
+ 109   1          ds1302_din();
+ 110   1          //data
+ 111   1          {
+ 112   2              WRITEBIT(read, 0, DS1302_IO);
+ 113   2              ds1302_clockpulse();
+ 114   2      
+ 115   2              WRITEBIT(read, 1, DS1302_IO);
+C51 COMPILER V9.60.0.0   DS1302                                                            06/28/2022 06:22:24 PAGE 3   
+
+ 116   2              ds1302_clockpulse();
+ 117   2      
+ 118   2              WRITEBIT(read, 2, DS1302_IO);
+ 119   2              ds1302_clockpulse();
+ 120   2      
+ 121   2              WRITEBIT(read, 3, DS1302_IO);
+ 122   2              ds1302_clockpulse();
+ 123   2      
+ 124   2              WRITEBIT(read, 4, DS1302_IO);
+ 125   2              ds1302_clockpulse();
+ 126   2      
+ 127   2              WRITEBIT(read, 5, DS1302_IO);
+ 128   2              ds1302_clockpulse();
+ 129   2      
+ 130   2              WRITEBIT(read, 6, DS1302_IO);
+ 131   2              ds1302_clockpulse();
+ 132   2      
+ 133   2              WRITEBIT(read, 7, DS1302_IO);
+ 134   2              ds1302_clockpulse();
+ 135   2          }
+ 136   1      
+ 137   1          //reset pins
+ 138   1          DS1302_RST = 0;
+ 139   1          DS1302_SCLK = 0;
+ 140   1          DS1302_IO = 0;
+ 141   1          return read;
+ 142   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    707    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      2    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

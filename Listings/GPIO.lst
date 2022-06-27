@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   GPIO                                                              06/28/2022 02:25:29 PAGE 1   
+C51 COMPILER V9.60.0.0   GPIO                                                              06/28/2022 03:06:35 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE GPIO
@@ -62,7 +62,7 @@ line level    source
   52   1        {
   53   2          if(GPIOx->Mode == GPIO_PullUp)    P4M1 &= ~GPIOx->Pin,  P4M0 &= ~GPIOx->Pin;   //上拉准双向口
   54   2          if(GPIOx->Mode == GPIO_HighZ)   P4M1 |=  GPIOx->Pin,  P4M0 &= ~GPIOx->Pin;   //浮空输入
-C51 COMPILER V9.60.0.0   GPIO                                                              06/28/2022 02:25:29 PAGE 2   
+C51 COMPILER V9.60.0.0   GPIO                                                              06/28/2022 03:06:35 PAGE 2   
 
   55   2          if(GPIOx->Mode == GPIO_OUT_OD)    P4M1 |=  GPIOx->Pin,  P4M0 |=  GPIOx->Pin;   //开漏输出
   56   2          if(GPIOx->Mode == GPIO_OUT_PP)    P4M1 &= ~GPIOx->Pin,  P4M0 |=  GPIOx->Pin;   //推挽输出

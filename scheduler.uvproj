@@ -476,6 +476,11 @@
               <FileType>1</FileType>
               <FilePath>.\Src\random\random.c</FilePath>
             </File>
+            <File>
+              <FileName>ds1302.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Src\ds1302\ds1302.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
