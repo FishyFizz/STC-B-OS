@@ -41,7 +41,11 @@
                 "c:\\Users\\Fizz\\Documents\\Fizz Userfile\\School File\\STC\\Scheduler\\Src\\stc",
                 "c:\\Users\\Fizz\\Documents\\Fizz Userfile\\School File\\STC\\Scheduler\\Src\\display",
                 "c:\\Users\\Fizz\\Documents\\Fizz Userfile\\School File\\STC\\Scheduler\\Src\\mem",
-                "c:\\Users\\Fizz\\Documents\\Fizz Userfile\\School File\\STC\\Scheduler\\Src\\conc"
+                "c:\\Users\\Fizz\\Documents\\Fizz Userfile\\School File\\STC\\Scheduler\\Src\\conc",
+                "c:\\Users\\Fizz\\Documents\\Fizz Userfile\\School File\\STC\\Scheduler\\Src\\error",
+                "c:\\Users\\Fizz\\Documents\\Fizz Userfile\\School File\\STC\\Scheduler\\Src\\adc",
+                "c:\\Users\\Fizz\\Documents\\Fizz Userfile\\School File\\STC\\Scheduler\\Src\\button",
+                "c:\\Users\\Fizz\\Documents\\Fizz Userfile\\School File\\STC\\Scheduler\\Src\\events"
             ],
             "defines": [
                 "STC",

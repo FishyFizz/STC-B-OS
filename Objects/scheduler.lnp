@@ -6,7 +6,16 @@
 ".\Objects\STARTUP.obj",
 ".\Objects\interrupt_entry.obj",
 ".\Objects\mem.obj",
-".\Objects\semaphore.obj" 
+".\Objects\semaphore.obj",
+".\Objects\error.obj",
+".\Objects\Exti.obj",
+".\Objects\USART.obj",
+".\Objects\GPIO.obj",
+".\Objects\EEPROM.obj",
+".\Objects\ADC.obj",
+".\Objects\adsensor.obj",
+".\Objects\button.obj",
+".\Objects\events.obj" 
 TO ".\Objects\scheduler" 
 
 PRINT(".\Listings\scheduler.map") DISABLEWARNING (57) 

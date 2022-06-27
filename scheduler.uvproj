@@ -421,6 +421,51 @@
               <FileType>1</FileType>
               <FilePath>.\Src\conc\semaphore.c</FilePath>
             </File>
+            <File>
+              <FileName>error.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Src\error\error.c</FilePath>
+            </File>
+            <File>
+              <FileName>Exti.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Src\stc\Exti.c</FilePath>
+            </File>
+            <File>
+              <FileName>USART.C</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Src\stc\USART.C</FilePath>
+            </File>
+            <File>
+              <FileName>GPIO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Src\stc\GPIO.c</FilePath>
+            </File>
+            <File>
+              <FileName>EEPROM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Src\stc\EEPROM.c</FilePath>
+            </File>
+            <File>
+              <FileName>ADC.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Src\stc\ADC.c</FilePath>
+            </File>
+            <File>
+              <FileName>adsensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Src\adc\adsensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>button.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Src\button\button.c</FilePath>
+            </File>
+            <File>
+              <FileName>events.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Src\events\events.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

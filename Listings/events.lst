@@ -1,0 +1,98 @@
+C51 COMPILER V9.60.0.0   EVENTS                                                            06/27/2022 23:44:34 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE EVENTS
+OBJECT MODULE PLACED IN .\Objects\events.obj
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\events\events.c OMF2 OPTIMIZE(0,SPEED) BROWSE DEFINE(STC)
+                    - DEBUG PRINT(.\Listings\events.lst) TABS(2) OBJECT(.\Objects\events.obj)
+
+line level    source
+
+   1          #include "events.h"
+   2          #include "../button/button.h"
+   3          #include "../bit_ops/bit_ops.h"
+   4          
+   5          XDATA u32 curr_events = 0;
+   6          
+   7          XDATA u8 proc_waiting_evt = 0;
+   8          XDATA u32 proc_listening_list[8] = {0,0,0,0,0,0,0,0};
+   9          /*
+  10              Example: process P waiting on event EVT_XXX and EVT_YYY
+  11              proc_waiting_evt.bit[P] = 1;
+  12              proc_listening_list[P] = EVT_XXX | EVT_YYY;
+  13          */
+  14          
+  15          void dispatch_events(u8 pid)
+  16          {
+  17   1          if(proc_waiting_evt & BIT(pid))
+  18   1          {
+  19   2              if(proc_listening_list[pid] & curr_events)
+  20   2              {
+  21   3                  /*
+  22   3                  process can read this to know which of 
+  23   3                  the listened events is actually occured.
+  24   3                  */
+  25   3                  proc_listening_list[pid] = curr_events; 
+  26   3                  CLEARBIT(proc_waiting_evt, pid);
+  27   3              }
+  28   2          }
+  29   1      }
+  30          
+  31          void process_btnevts()
+  32          {
+  33   1          update_button_state();
+  34   1      
+  35   1          if(btnstate_posedge & BTNSTATE_B1) curr_events |= EVT_BTN1_DN;
+  36   1          if(btnstate_posedge & BTNSTATE_B2) curr_events |= EVT_BTN2_DN;
+  37   1          if(btnstate_posedge & BTNSTATE_B3) curr_events |= EVT_BTN3_DN;
+  38   1          if(btnstate_posedge & BTNSTATE_UP)      curr_events |= EVT_NAV_U;
+  39   1          if(btnstate_posedge & BTNSTATE_DOWN)    curr_events |= EVT_NAV_D;
+  40   1          if(btnstate_posedge & BTNSTATE_LEFT)    curr_events |= EVT_NAV_L;
+  41   1          if(btnstate_posedge & BTNSTATE_RIGHT)   curr_events |= EVT_NAV_R;
+  42   1          if(btnstate_posedge & BTNSTATE_PUSH)    curr_events |= EVT_NAV_PUSH;
+  43   1          
+  44   1          if(btnstate_negedge & BTNSTATE_B1) curr_events |= EVT_BTN1_UP;
+  45   1          if(btnstate_negedge & BTNSTATE_B2) curr_events |= EVT_BTN2_UP;
+  46   1          if(btnstate_negedge & BTNSTATE_B3) curr_events |= EVT_NAV_BTN3_RESET;
+  47   1          if(btnstate_negedge & BTNSTATE_UP)      curr_events |= EVT_NAV_BTN3_RESET;
+  48   1          if(btnstate_negedge & BTNSTATE_DOWN)    curr_events |= EVT_NAV_BTN3_RESET;
+  49   1          if(btnstate_negedge & BTNSTATE_LEFT)    curr_events |= EVT_NAV_BTN3_RESET;
+  50   1          if(btnstate_negedge & BTNSTATE_RIGHT)   curr_events |= EVT_NAV_BTN3_RESET;
+  51   1          if(btnstate_negedge & BTNSTATE_PUSH)    curr_events |= EVT_NAV_BTN3_RESET;
+  52   1      }
+  53          
+  54          void process_events()
+C51 COMPILER V9.60.0.0   EVENTS                                                            06/27/2022 23:44:34 PAGE 2   
+
+  55          {
+  56   1          curr_events = 0;
+  57   1          
+  58   1          process_btnevts();
+  59   1      
+  60   1          dispatch_events(0);
+  61   1          dispatch_events(1);
+  62   1          dispatch_events(2);
+  63   1          dispatch_events(3);
+  64   1          dispatch_events(4);
+  65   1          dispatch_events(5);
+  66   1          dispatch_events(6);
+  67   1          dispatch_events(7);
+  68   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    928    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     37    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

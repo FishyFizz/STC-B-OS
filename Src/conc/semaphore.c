@@ -1,4 +1,6 @@
 #include "semaphore.h"
+#include "../bit_ops/bit_ops.h"
+#include "../scheduler/scheduler.h"
 
 XDATA char semaphores[MAX_SEMAPHORES];
 XDATA u8 proc_sem_wait_flag[MAX_SEMAPHORES];
@@ -15,11 +17,10 @@ void __sem_init(u8 sem_id, char val)
     semaphores[sem_id] = val;
 }
 
-
 void __sem_post(u8 sem_id)
 {
     XDATA u8 select_wake;
-    
+
     //No process is waiting, only increment semaphore
     if(!proc_sem_wait_flag[sem_id])
     {

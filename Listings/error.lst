@@ -1,0 +1,62 @@
+C51 COMPILER V9.60.0.0   ERROR                                                             06/27/2022 23:28:00 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE ERROR
+OBJECT MODULE PLACED IN .\Objects\error.obj
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\error\error.c OMF2 OPTIMIZE(0,SPEED) BROWSE DEFINE(STC) D
+                    -EBUG PRINT(.\Listings\error.lst) TABS(2) OBJECT(.\Objects\error.obj)
+
+line level    source
+
+   1          #include "error.h"
+   2          #include "../display/seg_led.h"
+   3          
+   4          /*
+   5              ERRCODES:
+   6          
+   7              1:  Scheduler can't find a process to run.
+   8              2:  Process slots full, can't create more.
+   9              10-17:  Process 0-7 should not be sleeping, but has a sleep countdown.
+  10                      You have to edit sleep_check according to your process' behaviours.
+  11              20: Semaphore out of bound.
+  12          */
+  13          XDATA u8 tmp_curr_seg;
+  14          void error_spin(u8 errorcode)
+  15          {
+  16   1          //disable interrupts (spin forever)
+  17   1          TR0 = 0;
+  18   1      
+  19   1          seg_set_str("ERROR   ");
+  20   1      
+  21   1          seg_display_content[7]=seg_decoder[errorcode%10];
+  22   1          errorcode/=10;
+  23   1          seg_display_content[6]=seg_decoder[errorcode%10];
+  24   1          errorcode/=10;
+  25   1          seg_display_content[5]=seg_decoder[errorcode%10];
+  26   1          errorcode/=10;
+  27   1      
+  28   1          while (1)
+  29   1          {
+  30   2              tmp_curr_seg++;
+  31   2              DISP_SEG(tmp_curr_seg & 0x7);
+  32   2              delay_ms(2);
+  33   2          }
+  34   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    210    ----
+   CONSTANT SIZE    =      9    ----
+   XDATA SIZE       =      1    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

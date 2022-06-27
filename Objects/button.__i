@@ -1,0 +1,1 @@
+"Src\button\button.c" OMF2 OPTIMIZE (0,SPEED) BROWSE DEFINE (STC) DEBUG PRINT(.\Listings\button.lst) TABS (2) OBJECT(.\Objects\button.obj)

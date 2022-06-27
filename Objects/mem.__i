@@ -1,1 +1,0 @@
-"Src\mem\mem.c" OMF2 OPTIMIZE (0,SPEED) BROWSE DEFINE (STC) DEBUG PRINT(.\Listings\mem.lst) TABS (2) OBJECT(.\Objects\mem.obj)

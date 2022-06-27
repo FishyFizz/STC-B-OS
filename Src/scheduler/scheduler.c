@@ -1,7 +1,9 @@
 #include "scheduler.h"
-#include "../display/seg_led.h"
 #include "../mem/mem.h"
 #include "../conc/semaphore.h"
+#include "../bit_ops/bit_ops.h"
+#include "../error/error.h"
+#include "../events/events.h"
 
 XDATA u8 interrupt_frames[8][15];
 XDATA u8 current_process = 0;
@@ -105,6 +107,10 @@ u8 process_ready(u8 pid)
     if(proc_waiting_sem & BIT(pid))
         return 0;
 
+    //Check process is not waitiong for events
+    if(proc_waiting_evt & BIT(pid))
+        return 0;
+        
     return 1;
 }
 
@@ -184,36 +190,4 @@ void sleep_check()
     //if (proc_sleep_countdown[5]) error_spin(15);
     //if (proc_sleep_countdown[6]) error_spin(16);
     //if (proc_sleep_countdown[7]) error_spin(17);
-}
-
-/*
-    ERRCODES:
-
-    1:  Scheduler can't find a process to run.
-    2:  Process slots full, can't create more.
-    10-17:  Process 0-7 should not be sleeping, but has a sleep countdown.
-            You have to edit sleep_check according to your process' behaviours.
-    20: Semaphore out of bound.
-*/
-XDATA u8 tmp_curr_seg;
-void error_spin(u8 errorcode)
-{
-    //disable interrupts (spin forever)
-    TR0 = 0;
-
-    seg_set_str("ERROR   ");
-
-    seg_display_content[7]=seg_decoder[errorcode%10];
-    errorcode/=10;
-    seg_display_content[6]=seg_decoder[errorcode%10];
-    errorcode/=10;
-    seg_display_content[5]=seg_decoder[errorcode%10];
-    errorcode/=10;
-
-    while (1)
-    {
-        tmp_curr_seg++;
-        DISP_SEG(tmp_curr_seg & 0x7);
-        delay_ms(2);
-    }
 }

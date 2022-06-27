@@ -2,7 +2,6 @@
 #define _SEMAPHORE_H_
 
 #include "../global.h"
-#include "../scheduler/scheduler.h"
 
 #define MAX_SEMAPHORES 8
 
