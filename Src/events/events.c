@@ -1,6 +1,7 @@
 #include "events.h"
 #include "../button/button.h"
 #include "../bit_ops/bit_ops.h"
+#include "../rs485/rs485.h"
 
 XDATA u32 curr_events = 0;
 
@@ -28,7 +29,7 @@ void dispatch_events(u8 pid)
     }
 }
 
-void process_btnevts()
+void collect_btnevts()
 {
     update_button_state();
 
@@ -51,11 +52,21 @@ void process_btnevts()
     if(btnstate_negedge & BTNSTATE_PUSH)    curr_events |= EVT_NAV_BTN3_RESET;
 }
 
+void collect_uartevts()
+{
+    if(rs485_evtstate)
+    {
+        rs485_evtstate = 0;
+        curr_events |= EVT_UART2_RECV;
+    }
+}
+
 void process_events()
 {
     curr_events = 0;
     
-    process_btnevts();
+    collect_btnevts();
+    collect_uartevts();
 
     dispatch_events(0);
     dispatch_events(1);

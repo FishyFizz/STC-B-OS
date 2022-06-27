@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   EXTI                                                              06/27/2022 23:28:00 PAGE 1   
+C51 COMPILER V9.60.0.0   EXTI                                                              06/28/2022 00:09:52 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE EXTI
@@ -62,7 +62,7 @@ line level    source
   52   1        if(EXT >  EXT_INT4) return 1; //空操作
   53   1        
   54   1        if(EXT == EXT_INT0) //外中断0
-C51 COMPILER V9.60.0.0   EXTI                                                              06/27/2022 23:28:00 PAGE 2   
+C51 COMPILER V9.60.0.0   EXTI                                                              06/28/2022 00:09:52 PAGE 2   
 
   55   1        {
   56   2          if(INTx->EXTI_Interrupt == ENABLE)    EX0 = 1;  //允许中断

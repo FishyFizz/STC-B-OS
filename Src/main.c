@@ -4,10 +4,13 @@
 #include "conc/semaphore.h"
 #include "bit_ops/bit_ops.h"
 #include "events/events.h"
+#include "rs485/rs485.h"
+#include "error/error.h"
 
 void startup()
 {
     seg_led_init();
+    rs485_init(1200);
     LED_SEG_SWITCH = 1;
 
     LEDs = 0xFF;
@@ -20,11 +23,20 @@ void startup()
 
 void proc1()
 {
-    XDATA u8 count = 0;
+    XDATA u8 buf[8] = {0,0,0,0,0,0,0,0};
     while(1)
     {
-        wait_on_evts(EVT_BTN1_DN | EVT_BTN1_UP);
-        seg_set_number(++count);
+        wait_on_evts(EVT_BTN1_DN | EVT_UART2_RECV);
+        {
+            if(MY_EVENTS & EVT_BTN1_DN)
+            {
+                buf[0]++;
+                seg_set_number(buf[0]);
+                rs485_write(buf, 1);
+            }
+            else if(MY_EVENTS & EVT_UART2_RECV)
+                led_display_content = rs485_buf[0];   
+        }
     }
 }
 

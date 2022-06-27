@@ -4,6 +4,7 @@
 #include "../bit_ops/bit_ops.h"
 #include "../error/error.h"
 #include "../events/events.h"
+#include "../clock_util/clock_util.h"
 
 XDATA u8 interrupt_frames[8][15];
 XDATA u8 current_process = 0;

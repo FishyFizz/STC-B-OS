@@ -15,7 +15,8 @@
 ".\Objects\ADC.obj",
 ".\Objects\adsensor.obj",
 ".\Objects\button.obj",
-".\Objects\events.obj" 
+".\Objects\events.obj",
+".\Objects\rs485.obj" 
 TO ".\Objects\scheduler" 
 
 PRINT(".\Listings\scheduler.map") DISABLEWARNING (57) 

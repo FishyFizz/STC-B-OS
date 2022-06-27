@@ -1,4 +1,10 @@
 
+/*
+	IMPORTANT NOTE:
+	
+	THIS FILE IS MODIFIED TO FIT WITH THE SCHEDULER CODE
+*/
+
 #include "USART.h"
 
 
@@ -197,32 +203,7 @@ void UART1_int (void) interrupt UART1_VECTOR
 	}
 }
 
-/********************* UART2ÖÐ¶Ïº¯Êý************************/
-void UART2_int (void) interrupt UART2_VECTOR
-{
-	if(RI2)
-	{
-		CLR_RI2();
-		if(COM2.B_RX_OK == 0)
-		{
-			if(COM2.RX_Cnt >= COM_RX2_Lenth)	COM2.RX_Cnt = 0;
-			RX2_Buffer[COM2.RX_Cnt++] = S2BUF;
-			COM2.RX_TimeOut = TimeOutSet2;
-		}
-	}
 
-	if(TI2)
-	{
-		CLR_TI2();
-		if(COM2.TX_read != COM2.TX_write)
-		{
-		 	S2BUF = TX2_Buffer[COM2.TX_read];
-			if(++COM2.TX_read >= COM_TX2_Lenth)		COM2.TX_read = 0;
-		}
-		else	COM2.B_TX_busy = 0;
-	}
-
-}
 
 
 

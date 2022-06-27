@@ -1,5 +1,6 @@
 #ifndef _SCHEDULER_H_
 #define _SCHEDULER_H_
+
 #include "../global.h"
 
 #define DEFAULT_TIMESLICES 3
@@ -7,7 +8,6 @@
 #define INTFRM_ADDRLO 0
 #define INTFRM_ADDRHI 1
 
-#define calc_TIM_from_ms_12t(t) ((u16)(65536 - (MAIN_Fosc / 12 / 1000 / 2 * t)))
 #define NEXT(x) (((x)+1) & 0x7)
 #define PROC_EXISTS(x) ((process_slot & BIT(x))>0)
 
@@ -39,6 +39,16 @@ extern DATA u8 flag_nosched;
     {atomic_code}\
     flag_nosched = 0;\
 }
+
+#define NOINT_ATOMIC_START(){TR0 = 0;}
+#define NOINT_ATOMIC_END(){TR0 = 1;}
+#define NOINT_ATOMIC(atomic_code)\
+{\
+    TR0 = 0;\
+    {atomic_code}\
+    TR0 = 1;\
+}
+
 
 typedef void (CODE *PROCESS_ENTRY)();
 

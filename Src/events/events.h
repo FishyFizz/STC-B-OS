@@ -27,10 +27,12 @@ extern XDATA u32 curr_events;
 
 extern XDATA u8 proc_waiting_evt;
 extern XDATA u32 proc_listening_list[8];
+#define MY_EVENTS (proc_listening_list[current_process])
 
 void process_events();
 void dispatch_events(u8);
-void process_btnevts();
+void collect_btnevts();
+void collect_uartevts();
 
 #define wait_on_evts(evts)\
 ATOMIC(\

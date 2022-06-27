@@ -1,0 +1,149 @@
+C51 COMPILER V9.60.0.0   RS485                                                             06/28/2022 01:50:14 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE RS485
+OBJECT MODULE PLACED IN .\Objects\rs485.obj
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\rs485\rs485.c OMF2 OPTIMIZE(0,SPEED) BROWSE DEFINE(STC) D
+                    -EBUG PRINT(.\Listings\rs485.lst) TABS(2) OBJECT(.\Objects\rs485.obj)
+
+line level    source
+
+   1          #include "rs485.h"
+   2          #include "../error/error.h"
+   3          #include "../display/seg_led.h"
+   4          
+   5          void rs485_init(u32 baudrate)
+   6          {
+   7   1      
+   8   1          //Set TX/DR pins (P37, P47) to Push-Pull, RX pin (P46) to input.
+   9   1          {
+  10   2              P4M1 &= 0x3F; // 0111 1111
+  11   2              P4M0 |= 0xC0;   // 1000 0000
+  12   2      
+  13   2              P3M1 &= 0x7F;   // 0111 1111
+  14   2              P3M0 |= 0x80;   // 1000 0000
+  15   2      
+  16   2              P4M1 |= 0x40;   // 0100 0000
+  17   2              P4M0 &= 0xBF;   // 1011 1111
+  18   2          }
+  19   1      
+  20   1          //Configure baudrate timer
+  21   1          {
+  22   2              IE2  &= ~(1<<2);  //no interrupt
+  23   2              INT_CLKO &= ~0x04;  //no pin output
+  24   2              //More work is done by USART_Configuration, according to uart_settings.UART_Baudrate
+  25   2          }
+  26   1      
+  27   1          //Initialize UART2 on P46 and P47
+  28   1          {
+  29   2              XDATA COMx_InitDefine uart_settings;
+  30   2              uart_settings.UART_Mode = UART_8bit_BRTx;
+  31   2              uart_settings.UART_BRT_Use = BRT_Timer2;
+  32   2              uart_settings.UART_BaudRate = baudrate;
+  33   2              uart_settings.Morecommunicate = DISABLE;
+  34   2              uart_settings.UART_RxEnable = ENABLE;
+  35   2              uart_settings.BaudRateDouble = DISABLE; 
+  36   2              uart_settings.UART_Interrupt = ENABLE;
+  37   2              uart_settings.UART_Polity = PolityHigh;
+  38   2              uart_settings.UART_P_SW = UART2_SW_P46_P47;
+  39   2              uart_settings.UART_RXD_TXD_Short = DISABLE;
+  40   2              USART_Configuration(USART2, &uart_settings);
+  41   2          }
+  42   1      
+  43   1          //Tx disable.
+  44   1          RS485_STATE = RS485_R;
+  45   1      
+  46   1          IE2 |= 1;
+  47   1      }
+  48          
+  49          //this function blocks current process until all data is sent
+  50          void __rs485_write(u8* buf, u8 len)
+  51          {
+  52   1          u8 i;
+  53   1          //Tx enable.
+  54   1          RS485_STATE = RS485_D;
+C51 COMPILER V9.60.0.0   RS485                                                             06/28/2022 01:50:14 PAGE 2   
+
+  55   1          //Disable UART2 interrupt (Tx uses polling mode)
+  56   1          IE2 &= ~1;
+  57   1      
+  58   1          for(i=0;i<len;i++)
+  59   1          {
+  60   2              //clear TX end flag
+  61   2              S2CON &= ~2;
+  62   2      
+  63   2              //feed byte into UART2 buffer
+  64   2              S2BUF = buf[i];
+  65   2      
+  66   2              //spin until TX end flag is set (by hardware)
+  67   2              while((S2CON & 2) == 0);
+  68   2          }
+  69   1      
+  70   1          //Tx disable.
+  71   1          RS485_STATE = RS485_R;
+  72   1      
+  73   1          //Enable UART2 interrupt
+  74   1          //(Rx uses interrupt to trigger, but still runs in polling mode)
+  75   1          S2CON &= ~1;   //Reset all flags
+  76   1          S2CON &= ~2;
+  77   1          IE2 |= 1;
+  78   1      }
+  79          
+  80          
+  81          XDATA u8 rs485_buf[128];
+  82          XDATA u8 rs485_rxcnt;
+  83          XDATA u32 rs485_timeout;
+  84          XDATA u8 rs485_evtstate = 0;
+  85          
+  86          void rs485_interrupt (void) interrupt UART2_VECTOR
+  87          {
+  88   1        //Tx uses polling mode, INT source can only be RX
+  89   1      
+  90   1          //Disable UART2 interrupt
+  91   1          //(Rx uses interrupt to trigger, but still runs in polling mode)
+  92   1          IE2 &= ~1;
+  93   1      
+  94   1          rs485_rxcnt = 0;
+  95   1          while(1)
+  96   1          {
+  97   2              S2CON &= ~1; //Remove RX end flag.
+  98   2              rs485_buf[rs485_rxcnt++] = S2BUF; //Retrieve byte.
+  99   2      
+ 100   2              //Spin until RX end flag is set (by hardware)
+ 101   2              rs485_timeout = 9000;//You have to try out a proper value for specific baud and clock frequency se
+             -ttings
+ 102   2              while((S2CON & 1)==0) 
+ 103   2              {
+ 104   3                  if(--rs485_timeout == 0)
+ 105   3                      goto RX_END;
+ 106   3              }
+ 107   2          }
+ 108   1      
+ 109   1          RX_END:;
+ 110   1          
+ 111   1          S2CON &= ~1;  //Reset all flags
+ 112   1          S2CON &= ~2;
+ 113   1          IE2 |= 1; //Enable UART2 interrupt
+ 114   1      
+ 115   1          rs485_evtstate = 1;
+C51 COMPILER V9.60.0.0   RS485                                                             06/28/2022 01:50:14 PAGE 3   
+
+ 116   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    340    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =    147    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      9    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

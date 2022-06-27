@@ -466,6 +466,11 @@
               <FileType>1</FileType>
               <FilePath>.\Src\events\events.c</FilePath>
             </File>
+            <File>
+              <FileName>rs485.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Src\rs485\rs485.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
