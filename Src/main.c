@@ -6,11 +6,13 @@
 #include "events/events.h"
 #include "rs485/rs485.h"
 #include "error/error.h"
+#include "random/random.h"
+#include "mem/mem.h"
 
 void startup()
 {
     seg_led_init();
-    rs485_init(1200);
+    rs485_init(115200);
     LED_SEG_SWITCH = 1;
 
     LEDs = 0xFF;
@@ -23,19 +25,24 @@ void startup()
 
 void proc1()
 {
-    XDATA u8 buf[8] = {0,0,0,0,0,0,0,0};
+    XDATA u8 buf[4];
+    XDATA u32 XDATA* ptr = (u32 XDATA*)buf;
+
     while(1)
     {
         wait_on_evts(EVT_BTN1_DN | EVT_UART2_RECV);
         {
             if(MY_EVENTS & EVT_BTN1_DN)
             {
-                buf[0]++;
-                seg_set_number(buf[0]);
-                rs485_write(buf, 1);
+                *ptr = rand32();
+                seg_set_number(*ptr);
+                rs485_write(buf, 4);
             }
             else if(MY_EVENTS & EVT_UART2_RECV)
-                led_display_content = rs485_buf[0];   
+            {
+                my_memcpy(buf, rs485_buf, 4);
+                seg_set_number(*ptr);
+            }
         }
     }
 }

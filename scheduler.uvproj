@@ -471,6 +471,11 @@
               <FileType>1</FileType>
               <FilePath>.\Src\rs485\rs485.c</FilePath>
             </File>
+            <File>
+              <FileName>random.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Src\random\random.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

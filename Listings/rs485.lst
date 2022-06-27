@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   RS485                                                             06/28/2022 01:50:14 PAGE 1   
+C51 COMPILER V9.60.0.0   RS485                                                             06/28/2022 02:25:29 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE RS485
@@ -62,7 +62,7 @@ line level    source
   52   1          u8 i;
   53   1          //Tx enable.
   54   1          RS485_STATE = RS485_D;
-C51 COMPILER V9.60.0.0   RS485                                                             06/28/2022 01:50:14 PAGE 2   
+C51 COMPILER V9.60.0.0   RS485                                                             06/28/2022 02:25:29 PAGE 2   
 
   55   1          //Disable UART2 interrupt (Tx uses polling mode)
   56   1          IE2 &= ~1;
@@ -110,8 +110,8 @@ line level    source
   98   2              rs485_buf[rs485_rxcnt++] = S2BUF; //Retrieve byte.
   99   2      
  100   2              //Spin until RX end flag is set (by hardware)
- 101   2              rs485_timeout = 9000;//You have to try out a proper value for specific baud and clock frequency se
-             -ttings
+ 101   2              rs485_timeout = 500;//You have to try out a proper value for specific baud and clock frequency set
+             -tings
  102   2              while((S2CON & 1)==0) 
  103   2              {
  104   3                  if(--rs485_timeout == 0)
@@ -126,7 +126,7 @@ line level    source
  113   1          IE2 |= 1; //Enable UART2 interrupt
  114   1      
  115   1          rs485_evtstate = 1;
-C51 COMPILER V9.60.0.0   RS485                                                             06/28/2022 01:50:14 PAGE 3   
+C51 COMPILER V9.60.0.0   RS485                                                             06/28/2022 02:25:29 PAGE 3   
 
  116   1      }
 

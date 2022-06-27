@@ -46,7 +46,8 @@
                 "c:\\Users\\Fizz\\Documents\\Fizz Userfile\\School File\\STC\\Scheduler\\Src\\adc",
                 "c:\\Users\\Fizz\\Documents\\Fizz Userfile\\School File\\STC\\Scheduler\\Src\\button",
                 "c:\\Users\\Fizz\\Documents\\Fizz Userfile\\School File\\STC\\Scheduler\\Src\\events",
-                "c:\\Users\\Fizz\\Documents\\Fizz Userfile\\School File\\STC\\Scheduler\\Src\\rs485"
+                "c:\\Users\\Fizz\\Documents\\Fizz Userfile\\School File\\STC\\Scheduler\\Src\\rs485",
+                "c:\\Users\\Fizz\\Documents\\Fizz Userfile\\School File\\STC\\Scheduler\\Src\\random"
             ],
             "defines": [
                 "STC",

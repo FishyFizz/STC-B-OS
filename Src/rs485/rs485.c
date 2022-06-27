@@ -98,7 +98,7 @@ void rs485_interrupt (void) interrupt UART2_VECTOR
         rs485_buf[rs485_rxcnt++] = S2BUF; //Retrieve byte.
 
         //Spin until RX end flag is set (by hardware)
-        rs485_timeout = 9000;//You have to try out a proper value for specific baud and clock frequency settings
+        rs485_timeout = 500;//You have to try out a proper value for specific baud and clock frequency settings
         while((S2CON & 1)==0) 
         {
             if(--rs485_timeout == 0)

@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   SEG_LED                                                           06/28/2022 00:09:51 PAGE 1   
+C51 COMPILER V9.60.0.0   SEG_LED                                                           06/28/2022 02:25:28 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE SEG_LED
@@ -62,7 +62,7 @@ line level    source
   44          void seg_led_scan_next()
   45          {
   46   1          switch(seg_led_current)
-C51 COMPILER V9.60.0.0   SEG_LED                                                           06/28/2022 00:09:51 PAGE 2   
+C51 COMPILER V9.60.0.0   SEG_LED                                                           06/28/2022 02:25:28 PAGE 2   
 
   47   1          {
   48   2              case 0: DISP_SEG(0)     seg_led_current++; break;

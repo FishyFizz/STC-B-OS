@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   EVENTS                                                            06/28/2022 01:53:01 PAGE 1   
+C51 COMPILER V9.60.0.0   EVENTS                                                            06/28/2022 02:25:29 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE EVENTS
@@ -62,7 +62,7 @@ line level    source
   52   1          if(btnstate_negedge & BTNSTATE_PUSH)    curr_events |= EVT_NAV_BTN3_RESET;
   53   1      }
   54          
-C51 COMPILER V9.60.0.0   EVENTS                                                            06/28/2022 01:53:01 PAGE 2   
+C51 COMPILER V9.60.0.0   EVENTS                                                            06/28/2022 02:25:29 PAGE 2   
 
   55          void collect_uartevts()
   56          {
