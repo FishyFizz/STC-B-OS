@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   MAIN                                                              06/28/2022 06:41:07 PAGE 1   
+C51 COMPILER V9.60.0.0   MAIN                                                              06/28/2022 07:49:22 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   52          
   53          void proc1()
   54          {
-C51 COMPILER V9.60.0.0   MAIN                                                              06/28/2022 06:41:07 PAGE 2   
+C51 COMPILER V9.60.0.0   MAIN                                                              06/28/2022 07:49:22 PAGE 2   
 
   55   1          ds1302_init();
   56   1      
@@ -86,7 +86,7 @@ line level    source
   74   1          startup();
   75   1      
   76   1          start_scheduler(1);
-  77   1          start_process(proc1);
+  77   1          //start_process(proc1);
   78   1      
   79   1          //DISPLAY DRIVER
   80   1          while(1)
@@ -95,13 +95,14 @@ line level    source
   85   2                  seg_led_scan_next();
   85   2                  process_events();
   85   2              )
-  86   2              yield(); 
-  87   2          }
-  88   1      }
+  86   2              led_display_content = system_cycles >> 4;
+  87   2              yield(); 
+  88   2          }
+  89   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    288    ----
+   CODE SIZE        =    303    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =      2    ----
    PDATA SIZE       =   ----    ----

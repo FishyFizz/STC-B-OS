@@ -1,0 +1,1 @@
+"Src\scheduler\interrupt_entry.a51" SET (LARGE) DEBUG PRINT(.\Listings\interrupt_entry.lst) OBJECT(.\Objects\interrupt_entry.obj) EP

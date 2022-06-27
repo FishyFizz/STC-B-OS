@@ -74,7 +74,7 @@ void main() //also proc0
     startup();
 
     start_scheduler(1);
-    start_process(proc1);
+    //start_process(proc1);
 
     //DISPLAY DRIVER
     while(1)
@@ -83,6 +83,7 @@ void main() //also proc0
             seg_led_scan_next();
             process_events();
         )
+        led_display_content = system_cycles >> 4;
         yield(); 
     }
 }

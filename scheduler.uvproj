@@ -481,6 +481,11 @@
               <FileType>1</FileType>
               <FilePath>.\Src\ds1302\ds1302.c</FilePath>
             </File>
+            <File>
+              <FileName>contextswitch.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Src\scheduler\contextswitch.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

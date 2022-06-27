@@ -1,0 +1,33 @@
+C51 COMPILER V9.60.0.0   CONTEXTSWITCH                                                     06/28/2022 07:28:30 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE CONTEXTSWITCH
+OBJECT MODULE PLACED IN .\Objects\contextswitch.obj
+COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\scheduler\contextswitch.c LARGE OMF2 OPTIMIZE(0,SPEED) BR
+                    -OWSE DEFINE(STC) DEBUG PRINT(.\Listings\contextswitch.lst) TABS(2) OBJECT(.\Objects\contextswitch.obj)
+
+line level    source
+
+   1          #include "contextswitch.h"
+   2          
+   3          IDATA u8 __stack[8][16] _at_ 0x80;
+   4          DATA u8 __tmp_intframe[16];
+   5          XDATA u8 interrupt_frames[8][16];
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   ----    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =    128    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     16    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
