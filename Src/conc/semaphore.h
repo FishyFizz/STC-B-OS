@@ -9,7 +9,7 @@
 extern XDATA char semaphores[MAX_SEMAPHORES];
 extern XDATA u8 proc_sem_wait_flag[MAX_SEMAPHORES];
 extern XDATA u8 sem_wake_round[MAX_SEMAPHORES];
-extern XDATA u8 proc_waiting;
+extern XDATA u8 proc_waiting_sem;
 /*
     If process P is waiting for semaphore SEM,
     then bit P of proc_sem_wait_flag[SEM] is set,

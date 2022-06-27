@@ -119,19 +119,7 @@ void main() //also proc0
     //DISPLAY DRIVER
     while(1)
     {
-        seg_set_number(conc_test);
-        switch(current)
-        {
-            case 0: DISP_SEG(0)     current++; break;
-            case 1: DISP_SEG(1)     current++; break;
-            case 2: DISP_SEG(2)     current++; break;
-            case 3: DISP_SEG(3)     current++; break;
-            case 4: DISP_SEG(4)     current++; break;
-            case 5: DISP_SEG(5)     current++; break;
-            case 6: DISP_SEG(6)     current++; break;
-            case 7: DISP_SEG(7)     current++; break;
-            case 8: DISP_LED()      current=0; break;
-        }
+        seg_led_scan_next();
         yield(); 
     }
 }

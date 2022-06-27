@@ -102,7 +102,7 @@ u8 process_ready(u8 pid)
         return 0;
 
     //Check process is not waiting for semaphore
-    if(proc_waiting & BIT(pid))
+    if(proc_waiting_sem & BIT(pid))
         return 0;
 
     return 1;
@@ -174,7 +174,6 @@ void __reschedule()
     my_memcpy((u8 IDATA*)(tmp_save_sp-16), interrupt_frames[current_process], 15);
 }
 
-u8 expected = 1;
 void sleep_check()
 {
     if (proc_sleep_countdown[0]) error_spin(10);

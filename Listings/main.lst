@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 18:15:30 PAGE 1   
+C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 22:24:17 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   52   2              CLEARBIT(led_display_content, 2);
   53   2          }
   54   1      }
-C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 18:15:30 PAGE 2   
+C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 22:24:17 PAGE 2   
 
   55          
   56          void proc4()
@@ -126,33 +126,21 @@ line level    source
  114   1          start_process(proc4);
  115   1          start_process(proc5);
  116   1          start_process(proc6);
-C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 18:15:30 PAGE 3   
+C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 22:24:17 PAGE 3   
 
  117   1          start_process(proc7);
  118   1      
  119   1          //DISPLAY DRIVER
  120   1          while(1)
  121   1          {
- 122   2              seg_set_number(conc_test);
- 123   2              switch(current)
- 124   2              {
- 125   3                  case 0: DISP_SEG(0)     current++; break;
- 126   3                  case 1: DISP_SEG(1)     current++; break;
- 127   3                  case 2: DISP_SEG(2)     current++; break;
- 128   3                  case 3: DISP_SEG(3)     current++; break;
- 129   3                  case 4: DISP_SEG(4)     current++; break;
- 130   3                  case 5: DISP_SEG(5)     current++; break;
- 131   3                  case 6: DISP_SEG(6)     current++; break;
- 132   3                  case 7: DISP_SEG(7)     current++; break;
- 133   3                  case 8: DISP_LED()      current=0; break;
- 134   3              }
- 135   2              yield(); 
- 136   2          }
- 137   1      }
+ 122   2              seg_led_scan_next();
+ 123   2              yield(); 
+ 124   2          }
+ 125   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1119    ----
+   CODE SIZE        =    863    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =      5    ----
    PDATA SIZE       =   ----    ----

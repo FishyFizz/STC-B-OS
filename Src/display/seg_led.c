@@ -3,6 +3,7 @@
 
 XDATA u8 seg_display_content[8];
 XDATA u8 led_display_content;
+XDATA u8 seg_led_current = 0;
 
 CODE u8 seg_decoder[128] ={
     0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7d, 0x07, 0x7f, 0x6f, 0x77,0x7c,0x39,0x5e,0x79,0x71,      //hex 0~F
@@ -41,38 +42,28 @@ void seg_set_number(u32 n)
     seg_display_content[0] = seg_decoder[n%10]; n/=10;
 }
 
-void seg_led_driver_loop()
+void seg_led_scan_next()
 {
-    XDATA u8 current = 0;
-    while(1)
+    switch(seg_led_current)
     {
-        switch(current)
-        {
-            case 0: DISP_SEG(0)     current++; break;
-            case 1: DISP_SEG(1)     current++; break;
-            case 2: DISP_SEG(2)     current++; break;
-            case 3: DISP_SEG(3)     current++; break;
-            case 4: DISP_SEG(4)     current++; break;
-            case 5: DISP_SEG(5)     current++; break;
-            case 6: DISP_SEG(6)     current++; break;
-            case 7: DISP_SEG(7)     current++; break;
-            case 8: DISP_LED()      current=0; break;
-        }
-
-        /*
-            NOTE: 
-            1ms or 2ms per scan looks great.
-            3ms per scan will have minor visual blinking effect.
-            4ms+ looks bad.
-
-            You might as well integrate display refresh code into
-            system timer interrupt service routine.
-        */
-
-        //if driver loop is runned as a process:
-        yield(); 
-
-        //if driver loop is runned directly:
-        //delay_ms(2);
+        case 0: DISP_SEG(0)     seg_led_current++; break;
+        case 1: DISP_SEG(1)     seg_led_current++; break;
+        case 2: DISP_SEG(2)     seg_led_current++; break;
+        case 3: DISP_SEG(3)     seg_led_current++; break;
+        case 4: DISP_SEG(4)     seg_led_current++; break;
+        case 5: DISP_SEG(5)     seg_led_current++; break;
+        case 6: DISP_SEG(6)     seg_led_current++; break;
+        case 7: DISP_SEG(7)     seg_led_current++; break;
+        case 8: DISP_LED()      seg_led_current=0; break;
     }
+
+    /*
+        NOTE: 
+        1ms or 2ms per scan looks great.
+        3ms per scan will have minor visual blinking effect.
+        4ms+ looks bad.
+
+        You might as well integrate display refresh code into
+        system timer interrupt service routine.
+    */
 }

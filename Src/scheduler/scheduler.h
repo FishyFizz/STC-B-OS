@@ -19,6 +19,7 @@ extern XDATA u8 process_slot;
 extern XDATA u8 remaining_timeslices;
 extern XDATA u8 proc_time_share[8];
 
+#define COUNTDOWN(x) {if(x) (x)--;}
 extern XDATA u16 proc_sleep_countdown[8];
 
 /*
@@ -53,7 +54,7 @@ u8 process_ready(u8 pid);
 u8 find_empty_slot();
 u8 find_runnable();
 
-#define COUNTDOWN(x) {if(x) (x)--;}
+
 void decrement_sleep_counters();
 
 /*
@@ -73,5 +74,14 @@ extern void __yield();  //ASM code entrance
 }
 
 void sleep_check();
+
+/*
+IMPORTANT NOTE:
+
+Due to CPU architecture problem (no multiple stacks), process must be 
+at their root routine (not inside any function call) when getting 
+rescheduled. So function calls must be atomic.
+
+*/
 
 #endif //_SCHEDULER_H_

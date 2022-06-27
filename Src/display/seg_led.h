@@ -77,6 +77,6 @@ void seg_set_number(u32 n);
 
 //warning: this is an infinite loop, use carefully. 
 //(best to run as a process, or use this as template to write your own code)
-void seg_led_driver_loop();
+void seg_led_scan_next();
 
 #endif

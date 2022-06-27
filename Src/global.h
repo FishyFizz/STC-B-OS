@@ -4,6 +4,15 @@
 #include "stc/config.h"
 #include "stc/timer.h"
 #include "stc/delay.h"
+#include "stc/ADC.h"
+#include "stc/EEPROM.h"
+#include "stc/Exti.h"
+#include "stc/GPIO.h"
+#include "stc/PCA.h"
+#include "stc/soft_uart.h"
+#include "stc/USART.h"
+
+#include "bit_ops/bit_ops.h"
 
 //#define STC
 
@@ -21,11 +30,5 @@
     #define INTERRUPT   interrupt
 #endif
 
-#define BIT(x) ((u8)(1<<(x)))
-#define CLEARBIT(var, bit) {(var) &= ~(1<<(bit));}
-#define SETBIT(var, bit) {(var) |= (1<<(bit));}
-#define RSL(var) (((var)<<1) + ((var)>>7))
-
-extern XDATA u32 conc_test;
 
 #endif //_GLOBAL_H_

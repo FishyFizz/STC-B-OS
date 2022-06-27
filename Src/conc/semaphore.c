@@ -3,7 +3,7 @@
 XDATA char semaphores[MAX_SEMAPHORES];
 XDATA u8 proc_sem_wait_flag[MAX_SEMAPHORES];
 XDATA u8 sem_wake_round[MAX_SEMAPHORES];
-XDATA u8 proc_waiting = 0;
+XDATA u8 proc_waiting_sem = 0;
 
 void __sem_init(u8 sem_id, char val)
 {
@@ -15,9 +15,11 @@ void __sem_init(u8 sem_id, char val)
     semaphores[sem_id] = val;
 }
 
-XDATA u8 select_wake;
+
 void __sem_post(u8 sem_id)
 {
+    XDATA u8 select_wake;
+    
     //No process is waiting, only increment semaphore
     if(!proc_sem_wait_flag[sem_id])
     {
@@ -32,7 +34,7 @@ void __sem_post(u8 sem_id)
 
     //Remove the waiting flag of the process
     proc_sem_wait_flag[sem_id] &= ~select_wake;
-    proc_waiting &= ~select_wake;
+    proc_waiting_sem &= ~select_wake;
 
     //Record the last waked process
     sem_wake_round[sem_id] = select_wake;
@@ -56,5 +58,5 @@ void __sem_wait(u8 sem_id)
     */
 
     proc_sem_wait_flag[sem_id] |= BIT(current_process);
-    proc_waiting |= BIT(current_process);
+    proc_waiting_sem |= BIT(current_process);
 }
