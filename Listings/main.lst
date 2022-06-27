@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 07:03:42 PAGE 1   
+C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 18:15:30 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   52   2              CLEARBIT(led_display_content, 2);
   53   2          }
   54   1      }
-C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 07:03:42 PAGE 2   
+C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 18:15:30 PAGE 2   
 
   55          
   56          void proc4()
@@ -92,58 +92,67 @@ line level    source
   80          void proc6()
   81          {
   82   1          sem_init(0,0);
-  83   1          sem_wait(0);
-  84   1          SETBIT(led_display_content, 6);
-  85   1          while(1) yield();
-  86   1      }
-  87          
-  88          void proc7()
-  89          {
-  90   1          sleep(2000);
-  91   1          SETBIT(led_display_content, 5);
-  92   1          sem_post(0);
-  93   1          while(1) yield();
-  94   1      }
-  95          
-  96          XDATA u8 current = 0;
-  97          void main() //also proc0
-  98          {
-  99   1          startup();
- 100   1      
- 101   1          start_scheduler(1);
- 102   1          start_process(proc1);
- 103   1          start_process(proc2);
- 104   1          start_process(proc3);
- 105   1          start_process(proc4);
- 106   1          start_process(proc5);
- 107   1          start_process(proc6);
- 108   1          start_process(proc7);
+  83   1          while(1)
+  84   1          {
+  85   2              sem_wait(0);
+  86   2              SETBIT(led_display_content,6);
+  87   2              sleep(2000);
+  88   2              sem_post(0);
+  89   2              CLEARBIT(led_display_content,6);
+  90   2          }
+  91   1      }
+  92          
+  93          void proc7()
+  94          {
+  95   1          while(1)
+  96   1          {
+  97   2              sleep(2000);
+  98   2              SETBIT(led_display_content,7);
+  99   2              sem_post(0);
+ 100   2              sem_wait(0);
+ 101   2              CLEARBIT(led_display_content, 7);
+ 102   2          }
+ 103   1      }
+ 104          
+ 105          XDATA u8 current = 0;
+ 106          void main() //also proc0
+ 107          {
+ 108   1          startup();
  109   1      
- 110   1          //DISPLAY DRIVER
- 111   1          while(1)
- 112   1          {
- 113   2              seg_set_number(conc_test);
- 114   2              switch(current)
- 115   2              {
- 116   3                  case 0: DISP_SEG(0)     current++; break;
-C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 07:03:42 PAGE 3   
+ 110   1          start_scheduler(1);
+ 111   1          start_process(proc1);
+ 112   1          start_process(proc2);
+ 113   1          start_process(proc3);
+ 114   1          start_process(proc4);
+ 115   1          start_process(proc5);
+ 116   1          start_process(proc6);
+C51 COMPILER V9.60.0.0   MAIN                                                              06/27/2022 18:15:30 PAGE 3   
 
- 117   3                  case 1: DISP_SEG(1)     current++; break;
- 118   3                  case 2: DISP_SEG(2)     current++; break;
- 119   3                  case 3: DISP_SEG(3)     current++; break;
- 120   3                  case 4: DISP_SEG(4)     current++; break;
- 121   3                  case 5: DISP_SEG(5)     current++; break;
- 122   3                  case 6: DISP_SEG(6)     current++; break;
- 123   3                  case 7: DISP_SEG(7)     current++; break;
- 124   3                  case 8: DISP_LED()      current=0; break;
- 125   3              }
- 126   2              yield(); 
- 127   2          }
- 128   1      }
+ 117   1          start_process(proc7);
+ 118   1      
+ 119   1          //DISPLAY DRIVER
+ 120   1          while(1)
+ 121   1          {
+ 122   2              seg_set_number(conc_test);
+ 123   2              switch(current)
+ 124   2              {
+ 125   3                  case 0: DISP_SEG(0)     current++; break;
+ 126   3                  case 1: DISP_SEG(1)     current++; break;
+ 127   3                  case 2: DISP_SEG(2)     current++; break;
+ 128   3                  case 3: DISP_SEG(3)     current++; break;
+ 129   3                  case 4: DISP_SEG(4)     current++; break;
+ 130   3                  case 5: DISP_SEG(5)     current++; break;
+ 131   3                  case 6: DISP_SEG(6)     current++; break;
+ 132   3                  case 7: DISP_SEG(7)     current++; break;
+ 133   3                  case 8: DISP_LED()      current=0; break;
+ 134   3              }
+ 135   2              yield(); 
+ 136   2          }
+ 137   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1015    ----
+   CODE SIZE        =   1119    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =      5    ----
    PDATA SIZE       =   ----    ----

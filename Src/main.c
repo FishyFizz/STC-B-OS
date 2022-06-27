@@ -80,17 +80,26 @@ void proc5()
 void proc6()
 {
     sem_init(0,0);
-    sem_wait(0);
-    SETBIT(led_display_content, 6);
-    while(1) yield();
+    while(1)
+    {
+        sem_wait(0);
+        SETBIT(led_display_content,6);
+        sleep(2000);
+        sem_post(0);
+        CLEARBIT(led_display_content,6);
+    }
 }
 
 void proc7()
 {
-    sleep(2000);
-    SETBIT(led_display_content, 5);
-    sem_post(0);
-    while(1) yield();
+    while(1)
+    {
+        sleep(2000);
+        SETBIT(led_display_content,7);
+        sem_post(0);
+        sem_wait(0);
+        CLEARBIT(led_display_content, 7);
+    }
 }
 
 XDATA u8 current = 0;

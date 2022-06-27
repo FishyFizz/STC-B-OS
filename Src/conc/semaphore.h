@@ -28,8 +28,12 @@ extern XDATA u8 proc_waiting;
     This behaviour can prevent starving some process.
 */
 
-void sem_init(u8 sem_id, char val);
-void sem_post(u8 sem_id);
-void sem_wait(u8 sem_id);
+void __sem_init(u8 sem_id, char val);
+void __sem_post(u8 sem_id);
+void __sem_wait(u8 sem_id);
+
+#define sem_init(sem_id,val) ATOMIC(__sem_init(sem_id,val);)
+#define sem_post(sem_id) ATOMIC(__sem_post(sem_id);)
+#define sem_wait(sem_id) ATOMIC(__sem_wait(sem_id);__yield();)
 
 #endif
