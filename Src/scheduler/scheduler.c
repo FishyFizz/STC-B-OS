@@ -29,15 +29,17 @@ void __start_scheduler(u8 ms_per_interrupt)
 {
     //Set Timer0, Enable interrupt.
     {   
-        XDATA TIM_InitTypeDef timer_settings;
-        timer_settings.TIM_Mode = TIM_16BitAutoReload;
-        timer_settings.TIM_Polity = PolityHigh;
-        timer_settings.TIM_Interrupt = ENABLE;
-        timer_settings.TIM_ClkSource = TIM_CLOCK_12T;
-        timer_settings.TIM_ClkOut = DISABLE;
-        timer_settings.TIM_Value = calc_TIM_from_ms_12t(ms_per_interrupt*2);
-        timer_settings.TIM_Run = ENABLE;
-        Timer_Inilize(Timer0, &timer_settings);
+        TR0 = 0;    //Stop timer
+        ET0 = 1;    //Enable interrupt
+        PT0 = 0;    //Low priority 
+				TMOD = (TMOD & ~0X03) | 0; //Timer mode 16bit autoreload
+        AUXR &= ~0x80; //12T mode
+        TMOD &= ~0X04; //Timer mode
+        INT_CLKO &= ~0x01; //No clock output
+
+        //Reload configuration
+        TH0 = (u8)(calc_TIM_from_ms_12t(ms_per_interrupt*2)>>8);
+        TL0 = calc_TIM_from_ms_12t(ms_per_interrupt*2) & 0xff;
     }
 
     //Enable interrupts
@@ -97,6 +99,7 @@ u8 select_process()
     
     //Can't find a process to run, Error code 1.
     error_spin(1);
+	return 8;
 }
 
 u8 process_ready(u8 pid)
@@ -121,10 +124,8 @@ u8 process_ready(u8 pid)
 }
 
 XDATA u8 tmp_process;
-u8 __start_process(PROCESS_ENTRY entry)
+void __start_process(PROCESS_ENTRY entry, u8* ppid)
 {
-	ATOMIC_START();
-    
     //find a slot for new process
     tmp_process = find_empty_slot();
     
@@ -136,9 +137,8 @@ u8 __start_process(PROCESS_ENTRY entry)
 
     //flag process existence
     process_slot |= BIT(tmp_process);
-
-	ATOMIC_END();
-    return tmp_process;
+    if(ppid)
+        *ppid = tmp_process;
 }
 
 u8 find_empty_slot()

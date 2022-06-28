@@ -1,10 +1,9 @@
 #include "adsensor.h"
+#include "../error/error.h"
 
 XDATA u8 adc_initialized = 0;
 void adc_init()
 {
-	XDATA ADC_InitTypeDef adc_settings;
-	
     if(adc_initialized)
         return;
 
@@ -15,14 +14,34 @@ void adc_init()
         P1.4 for Light sensor
         P1.7 for Button3 and Navigation Button
     */
-    adc_settings.ADC_Px = ADC_P12 | ADC_P13 | ADC_P14 | ADC_P17;
-    adc_settings.ADC_Speed = ADC_90T;
-    adc_settings.ADC_Power = ENABLE;
-    adc_settings.ADC_AdjResult = ADC_RES_H8L2;
-    adc_settings.ADC_Polity = PolityLow;
-    adc_settings.ADC_Interrupt = DISABLE;
+    P1ASF = ADC_P12 | ADC_P13 | ADC_P14 | ADC_P17;
 
-    ADC_Inilize(&adc_settings);
+    ADC_CONTR |= 0x80; //Power On
+    ADC_CONTR = (ADC_CONTR & ~ADC_90T) | ADC_90T; //Speed select
+    PCON2 &= ~(1<<5); //result byte order: high->ADC_RES
+    EADC = 0; //use polling, no interrupt
 
     adc_initialized = 1;
+}
+
+u8 adc_read(u8 channel)	//channel = 0~7
+{
+    XDATA u8 timeout;
+	ADC_RES = 0;
+
+	ADC_CONTR = (ADC_CONTR & 0xe0) | ADC_START | channel; //select channel
+	NOP(4);
+
+    //poll
+	for(timeout=0; timeout<250; timeout++)	
+	{
+		if(ADC_CONTR & ADC_FLAG)
+		{
+			ADC_CONTR &= ~ADC_FLAG;
+			return	ADC_RES;
+		}
+	}
+
+    error_spin(3);
+	return 0;
 }

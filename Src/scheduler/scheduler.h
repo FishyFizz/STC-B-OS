@@ -38,7 +38,7 @@ extern DATA u8 interrupt_counter;
 #define ATOMIC(atomic_code)\
 {\
     flag_nosched = 1;\
-    {atomic_code}\
+    {atomic_code;}\
     flag_nosched = 0;\
 }
 
@@ -47,7 +47,7 @@ extern DATA u8 interrupt_counter;
 #define NOINT_ATOMIC(atomic_code)\
 {\
     TR0 = 0;\
-    {atomic_code}\
+    {atomic_code;}\
     TR0 = 1;\
 }
 
@@ -55,12 +55,12 @@ extern DATA u8 interrupt_counter;
 typedef void (CODE *PROCESS_ENTRY)();
 
 void __start_scheduler(u8 ms_per_interrupt);
-#define start_scheduler(ms_per_interrupt) {__start_scheduler(ms_per_interrupt); SP = __stack;}
+#define start_scheduler(ms_per_interrupt) {__start_scheduler(ms_per_interrupt); SP = __stack;TR0 = 1;}
 
 u8 select_process();
 
-u8 __start_process(PROCESS_ENTRY entry);
-#define start_process(entry) __start_process(entry)
+void __start_process(PROCESS_ENTRY entry,u8* ppid);
+#define start_process(entry,ppid) ATOMIC(__start_process(entry,ppid););
 
 void error_spin(u8 errorcode);
 u8 process_ready(u8 pid);

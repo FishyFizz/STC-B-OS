@@ -2,3 +2,4 @@
 /Objects
 *.bak
 *.uvgui.*
+/.*/

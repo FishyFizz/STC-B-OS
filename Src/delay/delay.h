@@ -2,7 +2,7 @@
 #ifndef	__DELAY_H
 #define	__DELAY_H
 
-#include	"config.h"
+#include	"../stc/config.h"
 
 void  delay_ms(unsigned char ms);
 

@@ -42,10 +42,6 @@ u8 __ds1302_readbyte(u8 addr);
     DS1302_IO = 0;\
 }
 
-extern XDATA u32 __spin;
-//#define __ds1302_clkspin() {for(__spin=6000;__spin;__spin--);}
-#define __ds1302_clkspin() {delay_ms(150);}
-
 #define debugio()\
 {\
     LED0 = DS1302_SCLK;\

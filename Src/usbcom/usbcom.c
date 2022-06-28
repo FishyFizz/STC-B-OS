@@ -15,28 +15,27 @@ void usbcom_init(u32 baudrate)
 
     //Configure baudrate timer
     {
-        IE2  &= ~(1<<2);	//no interrupt
-        INT_CLKO &= ~0x04;	//no pin output
-        //More work is done by USART_Configuration, according to uart_settings.UART_Baudrate
+        XDATA u16 reload = 65536 - (MAIN_Fosc / 4) / baudrate;
+        
+        AUXR |= 0x01;		//S1 BRT Use Timer2;
+        AUXR &= ~(1<<4);	//Timer stop
+        AUXR &= ~(1<<3);	//Timer2 set As Timer
+        AUXR |=  (1<<2);	//Timer2 set as 1T mode
+        IE2  &= ~(1<<2);	//Disable interrup
+
+        TH2 = (u8)(reload>>8);
+        TL2 = (u8)reload;
+        AUXR |=  (1<<4);	//Timer run enable
     }
 
     //Initialize UART1 on P30 and P31
     {
-        XDATA COMx_InitDefine uart_settings;
-        uart_settings.UART_Mode = UART_8bit_BRTx;
-        uart_settings.UART_BRT_Use = BRT_Timer2;
-        uart_settings.UART_BaudRate = baudrate;
-        uart_settings.Morecommunicate = DISABLE;
-        uart_settings.UART_RxEnable = ENABLE;
-        uart_settings.BaudRateDouble = DISABLE; 
-        uart_settings.UART_Interrupt = ENABLE;
-        uart_settings.UART_Polity = PolityHigh;
-        uart_settings.UART_P_SW = UART1_SW_P30_P31;
-        uart_settings.UART_RXD_TXD_Short = DISABLE;
-        USART_Configuration(USART1, &uart_settings);
+        PS = 1;	//High priority interrupt
+        SCON = (SCON & 0x3f) | (1<<6); //8bit mode
+        REN = 1; //Enable Rx
+        P_SW1 = (P_SW1 & 0x3f) | (0 & 0xc0);	//Select IO port P30/P31
+        ES = 1;	//Enable interrupt (wait for incoming data)
     }
-
-    ES = 1;
 }
 
 //this function blocks current process until all data is sent

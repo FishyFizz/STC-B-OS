@@ -11,7 +11,7 @@
 //Navigation Button and Button3 are connected to analog input.
 
 //Get raw analog data.
-#define nav_btn3_adc() ((u8)(Get_ADC10bitResult(ADC_CH7)>>2))
+#define nav_btn3_adc() (adc_read(ADC_NAV))
 
 
 #define BTNSTATE_B1     0x1

@@ -1,15 +1,18 @@
 #include "error.h"
 #include "../display/seg_led.h"
 #include "../mem/mem.h"
+#include "../delay/delay.h"
 
 /*
     ERRCODES:
 
     1:  Scheduler can't find a process to run.
     2:  Process slots full, can't create more.
+    3:  Cannot read ADC value.
+    4:  Semaphore out of bound.
+    5:  Process kill API test failed.
     10-17:  Process 0-7 should not be sleeping, but has a sleep countdown.
             You have to edit sleep_check according to your process' behaviours.
-    20: Semaphore out of bound.
 */
 XDATA u8 tmp_curr_seg;
 void error_spin(u8 errorcode)

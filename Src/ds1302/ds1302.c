@@ -1,8 +1,6 @@
 #include "ds1302.h"
 #include "../display/seg_led.h"
 
-XDATA u8 __spin;
-
 void __ds1302_writebyte(u8 addr, u8 write)
 {
     ds1302_dout();

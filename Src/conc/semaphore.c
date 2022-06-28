@@ -10,7 +10,7 @@ XDATA u8 proc_waiting_sem = 0;
 void __sem_init(u8 sem_id, char val)
 {
     if (sem_id >= MAX_SEMAPHORES)
-        error_spin(20);
+        error_spin(4);
         
     proc_sem_wait_flag[sem_id] = 0;
     sem_wake_round[sem_id] = 1;
