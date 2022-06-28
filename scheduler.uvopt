@@ -401,10 +401,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>138757464</ColumnNumber>
+      <ColumnNumber>138757498</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>95</TopLine>
-      <CurrentLine>95</CurrentLine>
+      <TopLine>59</TopLine>
+      <CurrentLine>59</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Src\stc\ADC.c</PathWithFileName>
       <FilenameWithoutPath>ADC.c</FilenameWithoutPath>
@@ -509,7 +509,7 @@
     </File>
     <File>
       <GroupNumber>1</GroupNumber>
-      <FileNumber>0</FileNumber>
+      <FileNumber>23</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
@@ -522,40 +522,5 @@
       <FilenameWithoutPath>buzzer.c</FilenameWithoutPath>
     </File>
   </Group>
-
-  <MDIGroups>
-    <Orientation>1</Orientation>
-    <ActiveMDIGroup>0</ActiveMDIGroup>
-    <MDIGroup>
-      <Size>100</Size>
-      <ActiveTab>3</ActiveTab>
-      <Documents>
-        <Doc>
-          <Name>.\Src\button\button.c</Name>
-          <ColumnNumber>138757464</ColumnNumber>
-          <TopLine>58</TopLine>
-          <CurrentLine>58</CurrentLine>
-        </Doc>
-        <Doc>
-          <Name>.\Src\stc\ADC.c</Name>
-          <ColumnNumber>138757464</ColumnNumber>
-          <TopLine>95</TopLine>
-          <CurrentLine>95</CurrentLine>
-        </Doc>
-        <Doc>
-          <Name>.\Src\stc\GPIO.c</Name>
-          <ColumnNumber>138757464</ColumnNumber>
-          <TopLine>67</TopLine>
-          <CurrentLine>67</CurrentLine>
-        </Doc>
-        <Doc>
-          <Name>.\Src\error\error.c</Name>
-          <ColumnNumber>138757398</ColumnNumber>
-          <TopLine>67</TopLine>
-          <CurrentLine>67</CurrentLine>
-        </Doc>
-      </Documents>
-    </MDIGroup>
-  </MDIGroups>
 
 </ProjectOpt>
