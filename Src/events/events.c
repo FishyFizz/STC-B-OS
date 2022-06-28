@@ -2,6 +2,7 @@
 #include "../button/button.h"
 #include "../bit_ops/bit_ops.h"
 #include "../rs485/rs485.h"
+#include "../usbcom/usbcom.h"
 
 XDATA u32 curr_events = 0;
 
@@ -59,6 +60,11 @@ void collect_uartevts()
         rs485_evtstate = 0;
         curr_events |= EVT_UART2_RECV;
     }
+	if(usbcom_evtstate)
+	{
+		usbcom_evtstate = 0;
+		curr_events |= EVT_UART1_RECV;
+	}
 }
 
 void process_events()
