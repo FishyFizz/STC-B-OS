@@ -511,6 +511,11 @@
               <FileType>1</FileType>
               <FilePath>.\Src\delay\delay.c</FilePath>
             </File>
+            <File>
+              <FileName>strfmt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Src\string_util\strfmt.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

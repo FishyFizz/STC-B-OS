@@ -13,6 +13,7 @@
 #include "usbcom/usbcom.h"
 #include "button/button.h"
 #include "delay/delay.h"
+#include "string_util/strfmt.h"
 
 #include "test_process/test_process.h"
 
@@ -21,13 +22,25 @@
 
 void startup();
 
+void testproc()
+{
+    while(1)
+    {
+        wait_on_evts(EVT_BTN1_DN);
+        {
+			u32_to_str_hex(24561037);
+			usbcom_write(fmtbuf+fmt_index,FMTBUF_LEN-1-fmt_index);
+        }
+    }
+}
+
 void main() //also proc0
 {
     startup();
     start_scheduler(1);
 
 	//start processes here.
-	start_process(usbcom_test, 0);
+	start_process(testproc, 0);
 	
     //DISPLAY & EVENTS DRIVER
     while(1)
