@@ -31,7 +31,8 @@ void startup()
 	buzzer_off();
 }
 
-/* RS485 TEST
+//RS485 TEST
+/*
 void proc1()
 {
     XDATA u8 buf[4];
@@ -57,7 +58,8 @@ void proc1()
 }
 */
 
-/* RTC TEST
+//RTC TEST
+/*
 void proc1()
 {
     ds1302_init();
@@ -77,13 +79,41 @@ void proc1()
 }
 */
 
+
+//Process sleep and yield test
 void proc1()
 {
 	while(1)
 	{
-		seg_set_number(system_cycles);
+		seg_set_str("hello   ");
+		sleep(1000);
+		seg_set_str("world   ");
+		sleep(1000);
+	}
+}
+
+void proc2()
+{
+	while(1)
+	{
+		if(system_cycles > 5000)
+			break;
 		yield();
 	}
+	
+	kill_process(1);
+	
+	while(1)
+	{
+		if(system_cycles > 10000)
+			break;
+		yield();
+	}
+	
+	if(start_process(proc1)!=1)
+		error_spin(55);
+	
+	while(1) yield();
 }
 
 XDATA u8 current = 0;
@@ -93,14 +123,15 @@ void main() //also proc0
 
     start_scheduler(1);
     start_process(proc1);
+	start_process(proc2);
 
     //DISPLAY DRIVER
     while(1)
 	{   
 		seg_led_scan_next();
-		//process_events();
+		process_events();
         //LEDs = system_cycles>>3;
-		led_display_content = system_cycles >> 3;
+		led_display_content = proc_sleep_countdown[1];
 		yield();
     }
 }

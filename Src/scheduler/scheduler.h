@@ -33,13 +33,13 @@ counter is incremented.
 */
 extern DATA u8 flag_nosched;
 extern DATA u8 interrupt_counter;
-#define ATOMIC_START() {ET0 = 0;}
-#define ATOMIC_END() {ET0 = 1;}
+#define ATOMIC_START() {flag_nosched = 1;}
+#define ATOMIC_END() {flag_nosched = 0;}
 #define ATOMIC(atomic_code)\
 {\
-    ET0 = 0;\
+    flag_nosched = 1;\
     {atomic_code}\
-    ET0 = 1;\
+    flag_nosched = 0;\
 }
 
 #define NOINT_ATOMIC_START(){TR0 = 0;}
@@ -60,7 +60,7 @@ void __start_scheduler(u8 ms_per_interrupt);
 u8 select_process();
 
 u8 __start_process(PROCESS_ENTRY entry);
-#define start_process(entry) {flag_nosched = 1; __start_process(entry); flag_nosched=0;}
+#define start_process(entry) __start_process(entry)
 
 void error_spin(u8 errorcode);
 u8 process_ready(u8 pid);
@@ -87,6 +87,8 @@ extern void __yield();  //ASM code entrance
 }
 
 void sleep_check();
+
+void kill_process(u8 pid);
 
 /*
 IMPORTANT NOTE:

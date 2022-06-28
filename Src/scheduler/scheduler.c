@@ -120,9 +120,10 @@ u8 process_ready(u8 pid)
     return 1;
 }
 
+XDATA u8 tmp_process;
 u8 __start_process(PROCESS_ENTRY entry)
 {
-    XDATA u8 tmp_process;
+	ATOMIC_START();
     
     //find a slot for new process
     tmp_process = find_empty_slot();
@@ -136,6 +137,7 @@ u8 __start_process(PROCESS_ENTRY entry)
     //flag process existence
     process_slot |= BIT(tmp_process);
 
+	ATOMIC_END();
     return tmp_process;
 }
 
@@ -193,4 +195,12 @@ void sleep_check()
     //if (proc_sleep_countdown[5]) error_spin(15);
     //if (proc_sleep_countdown[6]) error_spin(16);
     //if (proc_sleep_countdown[7]) error_spin(17);
+}
+
+void kill_process(u8 pid)
+{
+	ATOMIC_START();
+	process_slot &= ~BIT(pid);
+	if(pid == current_process) yield();
+	ATOMIC_END();
 }
