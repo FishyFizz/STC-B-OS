@@ -1,10 +1,10 @@
-C51 COMPILER V9.60.0.0   EVENTS                                                            06/28/2022 07:28:30 PAGE 1   
+C51 COMPILER V9.05   EVENTS                                                                06/28/2022 11:57:17 PAGE 1   
 
 
-C51 COMPILER V9.60.0.0, COMPILATION OF MODULE EVENTS
+C51 COMPILER V9.05, COMPILATION OF MODULE EVENTS
 OBJECT MODULE PLACED IN .\Objects\events.obj
-COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\events\events.c LARGE OMF2 OPTIMIZE(0,SPEED) BROWSE DEFIN
-                    -E(STC) DEBUG PRINT(.\Listings\events.lst) TABS(2) OBJECT(.\Objects\events.obj)
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Src\events\events.c LARGE OMF2 OPTIMIZE(0,SPEED) BROWSE NOAREGS DEFINE(STC)
+                    - DEBUG PRINT(.\Listings\events.lst) OBJECT(.\Objects\events.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   52   1          if(btnstate_negedge & BTNSTATE_PUSH)    curr_events |= EVT_NAV_BTN3_RESET;
   53   1      }
   54          
-C51 COMPILER V9.60.0.0   EVENTS                                                            06/28/2022 07:28:30 PAGE 2   
+C51 COMPILER V9.05   EVENTS                                                                06/28/2022 11:57:17 PAGE 2   
 
   55          void collect_uartevts()
   56          {
@@ -92,7 +92,7 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    999    ----
+   CODE SIZE        =   1001    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =     38    ----
    PDATA SIZE       =   ----    ----

@@ -1,10 +1,10 @@
-C51 COMPILER V9.60.0.0   SEG_LED                                                           06/28/2022 07:28:29 PAGE 1   
+C51 COMPILER V9.05   SEG_LED                                                               06/28/2022 11:57:14 PAGE 1   
 
 
-C51 COMPILER V9.60.0.0, COMPILATION OF MODULE SEG_LED
+C51 COMPILER V9.05, COMPILATION OF MODULE SEG_LED
 OBJECT MODULE PLACED IN .\Objects\seg_led.obj
-COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\display\seg_led.c LARGE OMF2 OPTIMIZE(0,SPEED) BROWSE DEF
-                    -INE(STC) DEBUG PRINT(.\Listings\seg_led.lst) TABS(2) OBJECT(.\Objects\seg_led.obj)
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Src\display\seg_led.c LARGE OMF2 OPTIMIZE(0,SPEED) BROWSE NOAREGS DEFINE(ST
+                    -C) DEBUG PRINT(.\Listings\seg_led.lst) OBJECT(.\Objects\seg_led.obj)
 
 line level    source
 
@@ -37,7 +37,7 @@ line level    source
   19          
   20          void seg_set_str(const char* str)
   21          {
-  22   1        seg_display_content[0] = seg_decoder[str[0]];
+  22   1              seg_display_content[0] = seg_decoder[str[0]];
   23   1          seg_display_content[1] = seg_decoder[str[1]];
   24   1          seg_display_content[2] = seg_decoder[str[2]];
   25   1          seg_display_content[3] = seg_decoder[str[3]];
@@ -62,7 +62,7 @@ line level    source
   44          void seg_led_scan_next()
   45          {
   46   1          switch(seg_led_current)
-C51 COMPILER V9.60.0.0   SEG_LED                                                           06/28/2022 07:28:29 PAGE 2   
+C51 COMPILER V9.05   SEG_LED                                                               06/28/2022 11:57:14 PAGE 2   
 
   47   1          {
   48   2              case 0: DISP_SEG(0)     seg_led_current++; break;
@@ -89,7 +89,7 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1252    ----
+   CODE SIZE        =   1284    ----
    CONSTANT SIZE    =    128    ----
    XDATA SIZE       =     17    ----
    PDATA SIZE       =   ----    ----

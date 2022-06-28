@@ -1,145 +1,159 @@
-AX51 MACRO ASSEMBLER  INTERRUPT_ENTRY                                                       06/28/22 07:54:49 PAGE     1
+AX51 MACRO ASSEMBLER  INTERRUPT_ENTRY                                                       06/28/22 11:57:38 PAGE     1
 
 
-MACRO ASSEMBLER AX51 V3.15.3.0
+MACRO ASSEMBLER AX51 V3.07c
 OBJECT MODULE PLACED IN .\Objects\interrupt_entry.obj
-ASSEMBLER INVOKED BY: C:\Program Files\Keil\C51\BIN\AX51.EXE Src\scheduler\interrupt_entry.a51 SET(LARGE) DEBUG PRINT(.\
-                      Listings\interrupt_entry.lst) OBJECT(.\Objects\interrupt_entry.obj) EP
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\AX51.EXE Src\scheduler\interrupt_entry.a51 SET(LARGE) DEBUG PRINT(.\Listings\inter
+                      rupt_entry.lst) OBJECT(.\Objects\interrupt_entry.obj) EP
 
 LOC    OBJ             LINE     SOURCE
 
                           1     
                           2     EXTERN CODE:NEAR (TIMER0_INTERRUPT, __RESCHEDULE)
                           3     
-                          4     EXTERN DATA (FLAG_NOSCHED, __TMP_INTFRAME)
+                          4     EXTERN DATA (FLAG_NOSCHED, __TMP_INTFRAME, INTERRUPT_COUNTER)
                           5     
 00A8.1                    6     SBIT ET0 = 0xA8 ^ 1
-                          7             
-                          8     ;=============================================================  
-                          9     
-00000B                   10     TIMER_INTERRUPT_ENTRANCE SEGMENT CODE AT 00Bh
-------                   11     RSEG TIMER_INTERRUPT_ENTRANCE
-00000B 020000     F      12         LJMP TIMER_0_INT
+0088.5                    7     SBIT TF0 = 0x88 ^ 5
+0088.4                    8     SBIT TR0 = 0x88 ^ 4
+  008A                    9     SFR TL0 = 0x8A
+  008C                   10     SFR TH0 = 0x8C
+                         11             
+                         12     ;=============================================================  
                          13     
-                         14     ;=============================================================  
-------                   15     INTERRUPT_HANDLER SEGMENT CODE
-------                   16     RSEG INTERRUPT_HANDLER
+00000B                   14     TIMER_INTERRUPT_ENTRANCE SEGMENT CODE AT 00Bh
+------                   15     RSEG TIMER_INTERRUPT_ENTRANCE
+00000B 020000     F      16         LJMP TIMER_0_INT
                          17     
-                         18         PUBLIC TIMER_0_INT
-000000                   19         TIMER_0_INT:
-                         20                     
-                         21             ;Save program state, PC already saved by hardware
-                         22             ;Size of interrupt frame is 15 bytes
-                         23             
-                         24             ;PUSH   PC_LOW
-                         25             ;PUSH   PC_HIGH
-000000 D000       E      26             POP __TMP_INTFRAME+1
-000002 D000       E      27             POP __TMP_INTFRAME
-                         28     
-000004 85E000     E      29             MOV __TMP_INTFRAME+2, ACC
-000007 85F000     E      30             MOV __TMP_INTFRAME+3, B
-00000A 858300     E      31             MOV __TMP_INTFRAME+4, DPH
-00000D 858200     E      32             MOV __TMP_INTFRAME+5, DPL
-000010 85D000     E      33             MOV __TMP_INTFRAME+6, PSW
-                         34     
-000013 8800       E      35             MOV __TMP_INTFRAME+7, R0
-000015 8900       E      36             MOV __TMP_INTFRAME+8, R1
-000017 8A00       E      37             MOV __TMP_INTFRAME+9, R2
-000019 8B00       E      38             MOV __TMP_INTFRAME+10, R3
-00001B 8C00       E      39             MOV __TMP_INTFRAME+11, R4
-00001D 8D00       E      40             MOV __TMP_INTFRAME+12, R5
-00001F 8E00       E      41             MOV __TMP_INTFRAME+13, R6
-000021 8F00       E      42             MOV __TMP_INTFRAME+14, R7
-                         43     
-000023 858100     E      44             MOV __TMP_INTFRAME+15, SP
-                         45     
-000026 120000     E      46             CALL TIMER0_INTERRUPT
-                         47     
-                         48             ;Restore program state
-000029 8500E0     E      49             MOV ACC , __TMP_INTFRAME+2
-00002C 8500F0     E      50             MOV B   ,  __TMP_INTFRAME+3
-00002F 850083     E      51             MOV DPH , __TMP_INTFRAME+4
-000032 850082     E      52             MOV DPL , __TMP_INTFRAME+5
-000035 8500D0     E      53             MOV PSW , __TMP_INTFRAME+6
-                         54     
-000038 A800       E      55             MOV R0  , __TMP_INTFRAME+7
-00003A A900       E      56             MOV R1  , __TMP_INTFRAME+8
-00003C AA00       E      57             MOV R2  , __TMP_INTFRAME+9
-AX51 MACRO ASSEMBLER  INTERRUPT_ENTRY                                                       06/28/22 07:54:49 PAGE     2
+                         18     ;=============================================================  
+------                   19     INTERRUPT_HANDLER SEGMENT CODE
+------                   20     RSEG INTERRUPT_HANDLER
+                         21     
+                         22         PUBLIC TIMER_0_INT
+000000                   23         TIMER_0_INT:
+                         24                     
+000000 0500       E      25                     INC INTERRUPT_COUNTER
+000002 C500       E      26                     XCH A, FLAG_NOSCHED
+000004 7052              27                     JNZ SKIP_TIMER0_INT;
+                         28                             
+000006 C500       E      29                             XCH A, FLAG_NOSCHED
+                         30                             
+                         31                             ;Save program state, PC already saved by hardware
+                         32                             ;Size of interrupt frame is 15 bytes
+                         33                             
+                         34                             ;PUSH   PC_LOW
+                         35                             ;PUSH   PC_HIGH
+000008 D000       E      36                             POP __TMP_INTFRAME+1
+00000A D000       E      37                             POP __TMP_INTFRAME
+                         38     
+00000C 85E000     E      39                             MOV __TMP_INTFRAME+2, ACC
+00000F 85F000     E      40                             MOV __TMP_INTFRAME+3, B
+000012 858300     E      41                             MOV __TMP_INTFRAME+4, DPH
+000015 858200     E      42                             MOV __TMP_INTFRAME+5, DPL
+000018 85D000     E      43                             MOV __TMP_INTFRAME+6, PSW
+                         44     
+00001B 8800       E      45                             MOV __TMP_INTFRAME+7, R0
+00001D 8900       E      46                             MOV __TMP_INTFRAME+8, R1
+00001F 8A00       E      47                             MOV __TMP_INTFRAME+9, R2
+000021 8B00       E      48                             MOV __TMP_INTFRAME+10, R3
+000023 8C00       E      49                             MOV __TMP_INTFRAME+11, R4
+000025 8D00       E      50                             MOV __TMP_INTFRAME+12, R5
+000027 8E00       E      51                             MOV __TMP_INTFRAME+13, R6
+000029 8F00       E      52                             MOV __TMP_INTFRAME+14, R7
+                         53     
+00002B 858100     E      54                             MOV __TMP_INTFRAME+15, SP
+                         55     
+00002E 120000     E      56                             CALL TIMER0_INTERRUPT
+                         57     
+AX51 MACRO ASSEMBLER  INTERRUPT_ENTRY                                                       06/28/22 11:57:38 PAGE     2
 
-00003E AB00       E      58             MOV R3  , __TMP_INTFRAME+10
-000040 AC00       E      59             MOV R4  , __TMP_INTFRAME+11
-000042 AD00       E      60             MOV R5  , __TMP_INTFRAME+12
-000044 AE00       E      61             MOV R6  , __TMP_INTFRAME+13
-000046 AF00       E      62             MOV R7  , __TMP_INTFRAME+14
-                         63     
-000048 850081     E      64             MOV SP  , __TMP_INTFRAME+15
-                         65     
-00004B C000       E      66             PUSH __TMP_INTFRAME
-00004D C000       E      67             PUSH __TMP_INTFRAME+1
-                         68     
-00004F 32                69             RETI
-                         70     
-                         71     ;============================================================= 
-                         72         PUBLIC __YIELD
-000050                   73         __YIELD:
-000050 C2A9              74             CLR ET0
+                         58                             ;Restore program state
+000031 8500E0     E      59                             MOV ACC , __TMP_INTFRAME+2
+000034 8500F0     E      60                             MOV B   ,  __TMP_INTFRAME+3
+000037 850083     E      61                             MOV DPH , __TMP_INTFRAME+4
+00003A 850082     E      62                             MOV DPL , __TMP_INTFRAME+5
+00003D 8500D0     E      63                             MOV PSW , __TMP_INTFRAME+6
+                         64     
+000040 A800       E      65                             MOV R0  , __TMP_INTFRAME+7
+000042 A900       E      66                             MOV R1  , __TMP_INTFRAME+8
+000044 AA00       E      67                             MOV R2  , __TMP_INTFRAME+9
+000046 AB00       E      68                             MOV R3  , __TMP_INTFRAME+10
+000048 AC00       E      69                             MOV R4  , __TMP_INTFRAME+11
+00004A AD00       E      70                             MOV R5  , __TMP_INTFRAME+12
+00004C AE00       E      71                             MOV R6  , __TMP_INTFRAME+13
+00004E AF00       E      72                             MOV R7  , __TMP_INTFRAME+14
+                         73     
+000050 850081     E      74                             MOV SP  , __TMP_INTFRAME+15
                          75     
-                         76             ;Save program state, PC already saved by hardware
-                         77             ;Size of interrupt frame is 15 bytes
-                         78             
-                         79             ;PUSH   PC_LOW
-                         80             ;PUSH   PC_HIGH
-000052 D000       E      81             POP __TMP_INTFRAME+1
-000054 D000       E      82             POP __TMP_INTFRAME
-                         83     
-000056 85E000     E      84             MOV __TMP_INTFRAME+2, ACC
-000059 85F000     E      85             MOV __TMP_INTFRAME+3, B
-00005C 858300     E      86             MOV __TMP_INTFRAME+4, DPH
-00005F 858200     E      87             MOV __TMP_INTFRAME+5, DPL
-000062 85D000     E      88             MOV __TMP_INTFRAME+6, PSW
+000053 C000       E      76                             PUSH __TMP_INTFRAME
+000055 C000       E      77                             PUSH __TMP_INTFRAME+1
+                         78     
+000057 32                79                             RETI
+                         80                     
+000058                   81                     SKIP_TIMER0_INT:
+000058 C500       E      82                     XCH A, FLAG_NOSCHED
+00005A 32                83                     RETI
+                         84     
+                         85     ;============================================================= 
+                         86         PUBLIC __YIELD
+00005B                   87         __YIELD:
+00005B 750001     E      88             MOV FLAG_NOSCHED, #1
                          89     
-000065 8800       E      90             MOV __TMP_INTFRAME+7, R0
-000067 8900       E      91             MOV __TMP_INTFRAME+8, R1
-000069 8A00       E      92             MOV __TMP_INTFRAME+9, R2
-00006B 8B00       E      93             MOV __TMP_INTFRAME+10, R3
-00006D 8C00       E      94             MOV __TMP_INTFRAME+11, R4
-00006F 8D00       E      95             MOV __TMP_INTFRAME+12, R5
-000071 8E00       E      96             MOV __TMP_INTFRAME+13, R6
-000073 8F00       E      97             MOV __TMP_INTFRAME+14, R7
-                         98     
-000075 858100     E      99             MOV __TMP_INTFRAME+15, SP
-                        100     
-000078 120000     E     101             CALL __RESCHEDULE
-                        102     
-                        103             ;Restore program state
-00007B 8500E0     E     104             MOV ACC , __TMP_INTFRAME+2
-00007E 8500F0     E     105             MOV B   ,  __TMP_INTFRAME+3
-000081 850083     E     106             MOV DPH , __TMP_INTFRAME+4
-000084 850082     E     107             MOV DPL , __TMP_INTFRAME+5
-000087 8500D0     E     108             MOV PSW , __TMP_INTFRAME+6
-                        109     
-00008A A800       E     110             MOV R0  , __TMP_INTFRAME+7
-00008C A900       E     111             MOV R1  , __TMP_INTFRAME+8
-00008E AA00       E     112             MOV R2  , __TMP_INTFRAME+9
-000090 AB00       E     113             MOV R3  , __TMP_INTFRAME+10
-000092 AC00       E     114             MOV R4  , __TMP_INTFRAME+11
-000094 AD00       E     115             MOV R5  , __TMP_INTFRAME+12
-000096 AE00       E     116             MOV R6  , __TMP_INTFRAME+13
-000098 AF00       E     117             MOV R7  , __TMP_INTFRAME+14
-                        118     
-00009A 850081     E     119             MOV SP  , __TMP_INTFRAME+15
-                        120     
-00009D C000       E     121             PUSH __TMP_INTFRAME
-00009F C000       E     122             PUSH __TMP_INTFRAME+1
+                         90             ;Save program state, PC already saved by hardware
+                         91             ;Size of interrupt frame is 16 bytes
+                         92             
+                         93             ;PUSH   PC_LOW
+                         94             ;PUSH   PC_HIGH
+00005E D000       E      95             POP __TMP_INTFRAME+1
+000060 D000       E      96             POP __TMP_INTFRAME
+                         97     
+000062 85E000     E      98             MOV __TMP_INTFRAME+2, ACC
+000065 85F000     E      99             MOV __TMP_INTFRAME+3, B
+000068 858300     E     100             MOV __TMP_INTFRAME+4, DPH
+00006B 858200     E     101             MOV __TMP_INTFRAME+5, DPL
+00006E 85D000     E     102             MOV __TMP_INTFRAME+6, PSW
+                        103     
+000071 8800       E     104             MOV __TMP_INTFRAME+7, R0
+000073 8900       E     105             MOV __TMP_INTFRAME+8, R1
+000075 8A00       E     106             MOV __TMP_INTFRAME+9, R2
+000077 8B00       E     107             MOV __TMP_INTFRAME+10, R3
+000079 8C00       E     108             MOV __TMP_INTFRAME+11, R4
+00007B 8D00       E     109             MOV __TMP_INTFRAME+12, R5
+00007D 8E00       E     110             MOV __TMP_INTFRAME+13, R6
+00007F 8F00       E     111             MOV __TMP_INTFRAME+14, R7
+                        112     
+000081 858100     E     113             MOV __TMP_INTFRAME+15, SP
+                        114     
+000084 120000     E     115             CALL __RESCHEDULE
+                        116     
+                        117             ;Restore program state
+000087 8500E0     E     118             MOV ACC , __TMP_INTFRAME+2
+00008A 8500F0     E     119             MOV B   ,  __TMP_INTFRAME+3
+00008D 850083     E     120             MOV DPH , __TMP_INTFRAME+4
+000090 850082     E     121             MOV DPL , __TMP_INTFRAME+5
+000093 8500D0     E     122             MOV PSW , __TMP_INTFRAME+6
                         123     
-AX51 MACRO ASSEMBLER  INTERRUPT_ENTRY                                                       06/28/22 07:54:49 PAGE     3
+AX51 MACRO ASSEMBLER  INTERRUPT_ENTRY                                                       06/28/22 11:57:38 PAGE     3
 
-0000A1 D2A9             124             SETB ET0
-0000A3 22               125             RET
-                        126     
-                        127     END
-AX51 MACRO ASSEMBLER  INTERRUPT_ENTRY                                                       06/28/22 07:54:49 PAGE     4
+000096 A800       E     124             MOV R0  , __TMP_INTFRAME+7
+000098 A900       E     125             MOV R1  , __TMP_INTFRAME+8
+00009A AA00       E     126             MOV R2  , __TMP_INTFRAME+9
+00009C AB00       E     127             MOV R3  , __TMP_INTFRAME+10
+00009E AC00       E     128             MOV R4  , __TMP_INTFRAME+11
+0000A0 AD00       E     129             MOV R5  , __TMP_INTFRAME+12
+0000A2 AE00       E     130             MOV R6  , __TMP_INTFRAME+13
+0000A4 AF00       E     131             MOV R7  , __TMP_INTFRAME+14
+                        132     
+0000A6 850081     E     133             MOV SP  , __TMP_INTFRAME+15
+                        134     
+0000A9 C000       E     135             PUSH __TMP_INTFRAME
+0000AB C000       E     136             PUSH __TMP_INTFRAME+1
+                        137     
+0000AD 750000     E     138                     MOV FLAG_NOSCHED, #0
+0000B0 22               139             RET
+                        140     
+                        141     END
+AX51 MACRO ASSEMBLER  INTERRUPT_ENTRY                                                       06/28/22 11:57:38 PAGE     4
 
 SYMBOL TABLE LISTING
 ------ ----- -------
@@ -149,19 +163,25 @@ N A M E                                   T Y P E  V A L U E     ATTRIBUTES
 
 __RESCHEDULE . . . . . . . . . . . . .    C  ADDR  -------       EXT
 __TMP_INTFRAME . . . . . . . . . . . .    D  ADDR  -------       EXT
-__YIELD. . . . . . . . . . . . . . . .    C  ADDR  0050H     R   SEG=INTERRUPT_HANDLER
+__YIELD. . . . . . . . . . . . . . . .    C  ADDR  005BH     R   SEG=INTERRUPT_HANDLER
 ACC. . . . . . . . . . . . . . . . . .    D  ADDR  00E0H     A   
 B. . . . . . . . . . . . . . . . . . .    D  ADDR  00F0H     A   
 DPH. . . . . . . . . . . . . . . . . .    D  ADDR  0083H     A   
 DPL. . . . . . . . . . . . . . . . . .    D  ADDR  0082H     A   
 ET0. . . . . . . . . . . . . . . . . .    B  ADDR  00A8H.1   A   
 FLAG_NOSCHED . . . . . . . . . . . . .    D  ADDR  -------       EXT
-INTERRUPT_HANDLER. . . . . . . . . . .    C  SEG   0000A4H       REL=UNIT, ALN=BYTE
+INTERRUPT_COUNTER. . . . . . . . . . .    D  ADDR  -------       EXT
+INTERRUPT_HANDLER. . . . . . . . . . .    C  SEG   0000B1H       REL=UNIT, ALN=BYTE
 PSW. . . . . . . . . . . . . . . . . .    D  ADDR  00D0H     A   
+SKIP_TIMER0_INT. . . . . . . . . . . .    C  ADDR  0058H     R   SEG=INTERRUPT_HANDLER
 SP . . . . . . . . . . . . . . . . . .    D  ADDR  0081H     A   
+TF0. . . . . . . . . . . . . . . . . .    B  ADDR  0088H.5   A   
+TH0. . . . . . . . . . . . . . . . . .    D  ADDR  008CH     A   
 TIMER0_INTERRUPT . . . . . . . . . . .    C  ADDR  -------       EXT
 TIMER_0_INT. . . . . . . . . . . . . .    C  ADDR  0000H     R   SEG=INTERRUPT_HANDLER
 TIMER_INTERRUPT_ENTRANCE . . . . . . .    C  SEG   00000EH       REL=ABS, ALN=BYTE
+TL0. . . . . . . . . . . . . . . . . .    D  ADDR  008AH     A   
+TR0. . . . . . . . . . . . . . . . . .    B  ADDR  0088H.4   A   
 
 
 REGISTER BANK(S) USED: 0 

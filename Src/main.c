@@ -9,6 +9,7 @@
 #include "random/random.h"
 #include "mem/mem.h"
 #include "ds1302/ds1302.h"
+#include "buzzer/buzzer.h"
 
 void startup()
 {
@@ -22,9 +23,15 @@ void startup()
     delay_ms(100);
     led_display_content = 0;
     seg_set_number(0);
+	
+	buzzer_init();
+	buzzer_setfreq(660);
+	buzzer_on();
+	delay_ms(10);
+	buzzer_off();
 }
 
-/*
+/* RS485 TEST
 void proc1()
 {
     XDATA u8 buf[4];
@@ -50,6 +57,7 @@ void proc1()
 }
 */
 
+/* RTC TEST
 void proc1()
 {
     ds1302_init();
@@ -67,6 +75,16 @@ void proc1()
         sleep(100);
     }
 }
+*/
+
+void proc1()
+{
+	while(1)
+	{
+		seg_set_number(system_cycles);
+		yield();
+	}
+}
 
 XDATA u8 current = 0;
 void main() //also proc0
@@ -74,16 +92,15 @@ void main() //also proc0
     startup();
 
     start_scheduler(1);
-    //start_process(proc1);
+    start_process(proc1);
 
     //DISPLAY DRIVER
     while(1)
-    {   
-        ATOMIC(
-            seg_led_scan_next();
-            process_events();
-        )
-        led_display_content = system_cycles >> 4;
-        yield(); 
+	{   
+		seg_led_scan_next();
+		//process_events();
+        //LEDs = system_cycles>>3;
+		led_display_content = system_cycles >> 3;
+		yield();
     }
 }

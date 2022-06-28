@@ -19,7 +19,8 @@
 ".\Objects\rs485.obj",
 ".\Objects\random.obj",
 ".\Objects\ds1302.obj",
-".\Objects\contextswitch.obj" 
+".\Objects\contextswitch.obj",
+".\Objects\buzzer.obj" 
 TO ".\Objects\scheduler" 
 
 PRINT(".\Listings\scheduler.map") DISABLEWARNING (57) 

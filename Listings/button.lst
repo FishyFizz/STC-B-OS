@@ -1,10 +1,10 @@
-C51 COMPILER V9.60.0.0   BUTTON                                                            06/28/2022 07:28:30 PAGE 1   
+C51 COMPILER V9.05   BUTTON                                                                06/28/2022 11:57:16 PAGE 1   
 
 
-C51 COMPILER V9.60.0.0, COMPILATION OF MODULE BUTTON
+C51 COMPILER V9.05, COMPILATION OF MODULE BUTTON
 OBJECT MODULE PLACED IN .\Objects\button.obj
-COMPILER INVOKED BY: C:\Program Files\Keil\C51\BIN\C51.EXE Src\button\button.c LARGE OMF2 OPTIMIZE(0,SPEED) BROWSE DEFIN
-                    -E(STC) DEBUG PRINT(.\Listings\button.lst) TABS(2) OBJECT(.\Objects\button.obj)
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Src\button\button.c LARGE OMF2 OPTIMIZE(0,SPEED) BROWSE NOAREGS DEFINE(STC)
+                    - DEBUG PRINT(.\Listings\button.lst) OBJECT(.\Objects\button.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   52   1      
   53   1          //different with previous detection, and currently set -> posedge
   54   1          btnstate_posedge = (curr_btn_state ^ last2_btn_state) & (curr_btn_state);   
-C51 COMPILER V9.60.0.0   BUTTON                                                            06/28/2022 07:28:30 PAGE 2   
+C51 COMPILER V9.05   BUTTON                                                                06/28/2022 11:57:16 PAGE 2   
 
   55   1      
   56   1          //different with previous detection, and previously set -> negedge
@@ -71,7 +71,7 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    424    ----
+   CODE SIZE        =    390    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =      6    ----
    PDATA SIZE       =   ----    ----

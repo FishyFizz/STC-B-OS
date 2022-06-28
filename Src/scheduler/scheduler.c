@@ -23,6 +23,7 @@ XDATA u8 proc_time_share[8] = {
 XDATA u16 proc_sleep_countdown[8] ={0, 0, 0, 0, 0, 0, 0, 0};
 
 DATA u8 flag_nosched = 0;
+DATA u8 interrupt_counter = 0;
 
 void __start_scheduler(u8 ms_per_interrupt)
 {
@@ -43,11 +44,17 @@ void __start_scheduler(u8 ms_per_interrupt)
     EA = 1;
 }
 
+/*
+	timer0_interrupt might be skipped by flag_nosched. but interrupt_counter
+	always gets incremented in ISR, so this information can be used to fast 
+	forward system time.
+*/
 void timer0_interrupt()
 {
-    system_cycles++;
-    remaining_timeslices--;
+    system_cycles += interrupt_counter;
+    COUNTDOWN(remaining_timeslices, interrupt_counter);
     decrement_sleep_counters();
+	interrupt_counter = 0;
 
     //Running atomic code, do not reschedule
     if(flag_nosched) return;
@@ -154,15 +161,14 @@ u8 find_empty_slot()
 
 void decrement_sleep_counters()
 {
-    COUNTDOWN(proc_sleep_countdown[0]);
-    COUNTDOWN(proc_sleep_countdown[1]);
-    COUNTDOWN(proc_sleep_countdown[2]);
-    COUNTDOWN(proc_sleep_countdown[3]);
-    COUNTDOWN(proc_sleep_countdown[4]);
-    COUNTDOWN(proc_sleep_countdown[5]);
-    COUNTDOWN(proc_sleep_countdown[6]);
-    COUNTDOWN(proc_sleep_countdown[7]);
-    
+    COUNTDOWN(proc_sleep_countdown[0], interrupt_counter);
+    COUNTDOWN(proc_sleep_countdown[1], interrupt_counter);
+    COUNTDOWN(proc_sleep_countdown[2], interrupt_counter);
+    COUNTDOWN(proc_sleep_countdown[3], interrupt_counter);
+    COUNTDOWN(proc_sleep_countdown[4], interrupt_counter);
+    COUNTDOWN(proc_sleep_countdown[5], interrupt_counter);
+    COUNTDOWN(proc_sleep_countdown[6], interrupt_counter);
+    COUNTDOWN(proc_sleep_countdown[7], interrupt_counter);
     sleep_check();
 }
 

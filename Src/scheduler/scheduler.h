@@ -20,7 +20,7 @@ extern XDATA u8 process_slot;
 extern XDATA u8 remaining_timeslices;
 extern XDATA u8 proc_time_share[8];
 
-#define COUNTDOWN(x) {if(x) (x)--;}
+#define COUNTDOWN(from, cnt) {if((from)>=(cnt)) (from)-=(cnt); else (from)=0;}
 extern XDATA u16 proc_sleep_countdown[8];
 
 /*
@@ -32,6 +32,7 @@ When set to 1, no rescheduling is performed in ISR, but system time
 counter is incremented.
 */
 extern DATA u8 flag_nosched;
+extern DATA u8 interrupt_counter;
 #define ATOMIC_START() {ET0 = 0;}
 #define ATOMIC_END() {ET0 = 1;}
 #define ATOMIC(atomic_code)\
