@@ -462,6 +462,11 @@
               <FileType>1</FileType>
               <FilePath>.\Src\buzzer\buzzer.c</FilePath>
             </File>
+            <File>
+              <FileName>usbcom.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Src\usbcom\usbcom.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

@@ -521,6 +521,20 @@
       <PathWithFileName>.\Src\buzzer\buzzer.c</PathWithFileName>
       <FilenameWithoutPath>buzzer.c</FilenameWithoutPath>
     </File>
+    <File>
+      <GroupNumber>1</GroupNumber>
+      <FileNumber>24</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <Focus>0</Focus>
+      <ColumnNumber>0</ColumnNumber>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\Src\usbcom\usbcom.c</PathWithFileName>
+      <FilenameWithoutPath>usbcom.c</FilenameWithoutPath>
+    </File>
   </Group>
 
 </ProjectOpt>

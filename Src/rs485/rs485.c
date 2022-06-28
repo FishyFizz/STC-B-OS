@@ -43,6 +43,7 @@ void rs485_init(u32 baudrate)
     //Tx disable.
     RS485_STATE = RS485_R;
 
+	//Enable interrupt (wait for incoming data)
     IE2 |= 1;
 }
 
