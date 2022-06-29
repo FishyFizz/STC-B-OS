@@ -461,6 +461,11 @@
               <FileType>1</FileType>
               <FilePath>.\Src\usbcom\usbcom.c</FilePath>
             </File>
+            <File>
+              <FileName>music.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Src\music\music.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

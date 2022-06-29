@@ -14,6 +14,7 @@
 #include "../ds1302/ds1302.h"
 #include "../buzzer/buzzer.h"
 #include "../usbcom/usbcom.h"
+#include "../music/music.h"
 
 void rtc_test();
 void music_doudizhu();

@@ -14,6 +14,7 @@
 #include "button/button.h"
 #include "delay/delay.h"
 #include "string_util/strfmt.h"
+#include "music/music.h"
 
 #include "test_process/test_process.h"
 
@@ -22,16 +23,18 @@
 
 void startup();
 
+
+CODE u16 music[]={
+	0x118, 0x11a, 0x111c, 0x118, 0x1215, 0x111a, 0x1117, 0x113, 0x1210, 0x1117, 0x1115, 0x113, 0x120c, 0x1113, 0x2410, 0x10e,
+	0x110, 0x2211, 0x1118, 0x117, 0x118, 0x2213, 0x1111, 0x110, 0x111, 0x2212, 0x1118, 0x117, 0x115, 0x2414
+};
+
 void testproc()
 {
-    while(1)
-    {
-        wait_on_evts(EVT_BTN1_DN);
-        {
-			u32_to_str_hex(24561037);
-			usbcom_write(fmtbuf+fmt_index,FMTBUF_LEN-1-fmt_index);
-        }
-    }
+	wait_on_evts(EVT_BTN1_DN);
+	buzzer_set_timebase(170);
+	play_music(music, 30);
+	while(1) yield();
 }
 
 void main() //also proc0
@@ -58,9 +61,9 @@ void startup()
     seg_set_number(0);
 
 	buttons_init();
-    rs485_init(115200);
-	usbcom_init(115200);
-
+    rs485_init(460800);
+	usbcom_init(460800);
+	buzzer_init();
 #ifdef STARTUP_BLINK
 	LED_SEG_SWITCH = USE_LED;
 	LEDs = 0xAA;
