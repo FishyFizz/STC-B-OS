@@ -11,9 +11,7 @@
 #include "button.h"
 #include "usbcom.h"
 #include "rs485.h"
-#include "game_ui.h"
 #include "random.h"
-#include "game_proc.h"
 
 #define TIMESLICE_MS	1
 #define T12RL		(65536 - MAIN_Fosc*TIMESLICE_MS/12/1000) 
@@ -143,9 +141,7 @@ main()
 	rs485_init(115200);
 		
 	//start process
-	start_process((u16)game_proc, 0, 0);
-	//start_process((u16)testproc5, 1, 0);
-	start_process((u16)gameui_proc, 1, 0);
+
 		
 		
 	//initialize PCA2 interrupt (as syscall interrupt)
