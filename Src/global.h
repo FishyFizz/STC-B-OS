@@ -1,10 +1,9 @@
 #ifndef _GLOBAL_H_
 #define _GLOBAL_H_
 
-#include "stc/config.h"
-#include "stc/STC15Fxxxx.H"
+#include "config.h"
 
-//#define STC
+#define STC
 
 #ifndef STC
     #define XDATA
@@ -12,12 +11,14 @@
     #define DATA
     #define CODE
     #define INTERRUPT
+	#define VFUNC
 #else
     #define XDATA       xdata
     #define IDATA       idata
     #define DATA        data
     #define CODE        code
     #define INTERRUPT   interrupt
+	#define VFUNC		small
 #endif
 
 

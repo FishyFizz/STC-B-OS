@@ -1,83 +1,166 @@
 #include "global.h"
-#include "scheduler/scheduler.h"
-#include "display/seg_led.h"
-#include "conc/semaphore.h"
-#include "bit_ops/bit_ops.h"
-#include "events/events.h"
-#include "rs485/rs485.h"
-#include "error/error.h"
-#include "random/random.h"
-#include "mem/mem.h"
-#include "ds1302/ds1302.h"
-#include "buzzer/buzzer.h"
-#include "usbcom/usbcom.h"
-#include "button/button.h"
-#include "delay/delay.h"
-#include "string_util/strfmt.h"
-#include "music/music.h"
+#include "stack.h"
+#include "xstack.h"
+#include "scheduler.h"
+#include "bit_ops.h"
+#include "timer0_isr.h"
+#include "syscall.h"
+#include "semaphore.h"
+#include "events.h"
+#include "seg_led.h"
+#include "button.h"
+#include "usbcom.h"
+#include "rs485.h"
+#include "random.h"
 
-#include "test_process/test_process.h"
-
-#define STARTUP_BLINK 
-//#define STARTUP_BEEP
-
-void startup();
+#define TIMESLICE_MS	1
+#define T12RL		(65536 - MAIN_Fosc*TIMESLICE_MS/12/1000) 
 
 
-CODE u16 music[]={
-	0x118, 0x11a, 0x111c, 0x118, 0x1215, 0x111a, 0x1117, 0x113, 0x1210, 0x1117, 0x1115, 0x113, 0x120c, 0x1113, 0x2410, 0x10e,
-	0x110, 0x2211, 0x1118, 0x117, 0x118, 0x2213, 0x1111, 0x110, 0x111, 0x2212, 0x1118, 0x117, 0x115, 0x2414
-};
-
-void testproc()
+void testproc(u16 param) large reentrant
 {
-	wait_on_evts(EVT_BTN1_DN);
-	buzzer_set_timebase(170);
-	play_music(music, 30);
-	while(1) yield();
+	while(1)
+	{
+		if((timer0_cnt>>5) & BIT(param))
+		{
+			SETBIT(led_display_content, param);
+		}
+		else
+		{
+			CLEARBIT(led_display_content, param);
+		}
+	}
 }
 
-void main() //also proc0
+void testproc2(u16 param) large reentrant
 {
-    startup();
-    start_scheduler(1);
+	while(1)
+	{
+		proc_sleep(param);
+		led_display_content = ~led_display_content;
+	}
+}
 
-	//start processes here.
-	start_process(testproc, 0);
+void testproc3(u16 param) large reentrant
+{
+	while(1)
+	{
+		proc_sleep(param);
+		led_display_content ^= 0x0f;
+	}
+}
+
+void testproc4() large reentrant
+{
+	while(1)
+	{
+		proc_sleep(500);
+		sem_post(0);
+		led_display_content |= 0x80;
+		sem_wait(0);
+		led_display_content &= ~0x80;
+	}
+}
+
+void testproc5() large reentrant
+{
+	sem_init(0,0);
+	while(1)
+	{
+		sem_wait(0);
+		led_display_content |= 0x40;
+		proc_sleep(500);
+		sem_post(0);
+		led_display_content &= ~0x40;
+	}
+}
+
+void testproc6(u16 param) large reentrant
+{
+	while(1)
+	{
+		proc_wait_evts(EVT_BTN1_DN);
+		seg_set_str("HELLO   ");
+		usbcom_write("hello \0",0);
+		proc_wait_evts(EVT_NAV_R);
+		seg_set_str("WORLD   ");
+		usbcom_write("world\r\n\0",0);
+		proc_wait_evts(EVT_UART1_RECV);
+		seg_set_str(usbcom_buf);
+	}
+}
+
+void testproc7(u16 param) large reentrant
+{
+	while(1)
+	{
+		proc_wait_evts(EVT_UART2_RECV | EVT_BTN1_DN);
+		if(MY_EVENTS & EVT_BTN1_DN)
+		{
+			*((u32 *)rs485_buf) = rand32();
+			rs485_write(rs485_buf, 4);
+			seg_set_number(*((u32 *)rs485_buf));
+		}
+		else
+		{
+			seg_set_number(*((u32 *)rs485_buf));
+		}
+	}
+}
+
+main()
+{
+	//initialize kernel stack and xstack pointer
+	SP = kernel_stack;
+	setxbp(kernel_xstack + KERNEL_XSTACKSIZE);
 	
-    //DISPLAY & EVENTS DRIVER
-    while(1)
-	{   
-		seg_led_scan_next();
-		process_events();
-		yield();
-    }
-}
+	//set process stacks and swap stacks owner
+	process_stack[0][PROCESS_STACKSIZE-1] = 0;
+	process_stack[1][PROCESS_STACKSIZE-1] = 1;
+	process_stack[2][PROCESS_STACKSIZE-1] = 2;
+	process_stack[3][PROCESS_STACKSIZE-1] = 3;
+	process_stack[4][PROCESS_STACKSIZE-1] = 4;
+	process_stack_swap[0][PROCESS_STACKSIZE-1] = 5;
+	process_stack_swap[1][PROCESS_STACKSIZE-1] = 6;
+	process_stack_swap[2][PROCESS_STACKSIZE-1] = 7;
+	
+	//initialize LED pins
+	P0M1 &= 0x00;
+	P0M0 |= 0xff;
+	P2M1 &= 0xf0;
+	P2M0 |= 0x0f;
+	//select LED, set all off
+	P23 = 1;
+	P0 = 0;
 
-void startup()
-{
-    seg_led_init();
-	led_display_content = 0;
-    seg_set_number(0);
-
+	//initialize buttons
 	buttons_init();
-    rs485_init(460800);
-	usbcom_init(460800);
-	buzzer_init();
-#ifdef STARTUP_BLINK
-	LED_SEG_SWITCH = USE_LED;
-	LEDs = 0xAA;
-	delay_ms(150);
-	LEDs = 0x55;
-	delay_ms(150);
-	DISP_LED();
-	delay_ms(150);
-#endif
-
-#ifdef STARTUP_BEEP
-	buzzer_setfreq(440);
-	buzzer_on();
-	delay_ms(50);
-	buzzer_off();
-#endif
+	
+	//initialize serial ports
+	usbcom_init(115200);
+	rs485_init(115200);
+		
+	//start process
+		
+		
+	//initialize PCA2 interrupt (as syscall interrupt)
+	//clear CCF2
+	CCON &= ~0x04;
+	//disable PCA2 module and set ECCF2
+	CCAPM2 = 1;
+	//low priority interrupt
+	PPCA = 0;
+	
+	//start main timer
+	TR0 = 0;														//stop timer
+	TMOD &= 0xF0;												//timer mode, 16b autoreload
+	AUXR &= 0x7F;												//12T mode
+	TL0 = T12RL & 0xff;							//set reload value
+	TH0 = (T12RL & 0xff00) >> 8;
+	ET0 = EA = 1;												//set interrupt enable
+	PT0 = 0;														//set priority to low
+	TR0 = 1;														//start timer
+	
+	//spin
+	while(1);
 }

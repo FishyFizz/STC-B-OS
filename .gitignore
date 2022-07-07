@@ -1,6 +1,5 @@
 /Listings
 /Objects
-/.*/
 *.bak
 *.uvgui.*
-/.*/
+*.uvopt
