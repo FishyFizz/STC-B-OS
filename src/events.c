@@ -69,7 +69,7 @@ void collect_uartevts() //VOID
 }
 
 
-void process_events() VFUNC //VOID
+void process_events() //VOID
 {
     curr_events = 0;
     
